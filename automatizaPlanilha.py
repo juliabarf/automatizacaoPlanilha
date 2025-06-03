@@ -15,20 +15,29 @@ class AutomatizacaoPlanilha:
         self.porosidade1 = df['Porosity Decimal']
         self.permeabilidade = df['Permeability (mD)']
 
-    @property
-    def planilha(self):
-        return self.df
 
+
+
+    def teste(self, teste1):
+        planilha = {
+            'profundidade': 1,
+            'porosidade': 2,
+            'porosidade1': "testando",
+            'permeabilidade': "tesstando",
+        }
+        planilha['profundidade'] = teste1
+        print(planilha)
     def rqi(self):
         #0,0314 * raiz(Permeabilidade/Porosidade)
         colunaRQI = 0.0314 * (math.sqrt(self.permeabilidade[0]/self.porosidade1[0]))
         print(colunaRQI)
 
-
-
     def phi(self):
         #porosidade/(100-porosidade)
-        pass
+        phi = self.porosidade[0]/(100 - self.porosidade[0])
+        print(phi*100) #colocar apenas os números antes da vírgula. esse é porcentagem
+
+
 
     #depois que conseguir os outros resultados
     def fzi(self):
@@ -39,6 +48,6 @@ class AutomatizacaoPlanilha:
         pass
 
 teste = AutomatizacaoPlanilha('fruta.xlsx')
-teste.rqi()
+teste.teste('oba')
 
 
