@@ -10,42 +10,54 @@ import math
 class AutomatizacaoPlanilha:
     def __init__(self, caminho):
         df = pd.read_excel(caminho)
-        self.df = df
-        self.profundidade = df['Profundidade']
-        self.porosidade = df['Porosity (%)']
-        self.porosidade1 = df['Porosity Decimal']
-        self.permeabilidade = df['Permeability (mD)']
-
+        self._df = df
+        self._profundidade = df['Profundidade']
+        self._porosidade = df['Porosity (%)']
+        self._porosidade1 = df['Porosity Decimal']
+        self._permeabilidade = df['Permeability (mD)']
 
     def teste(self):
         dados = {
-            'profundidade': self.profundidade,
-            'porosidade': self.porosidade,
-            'porosidade1': self.porosidade1,
-            'permeabilidade':  self.permeabilidade,
+            'profundidade': self._profundidade,
+            'porosidade': self._porosidade,
+            'porosidade1': self._porosidade1,
+            'permeabilidade':  self._permeabilidade,
         }
-        print(dados)
+        lista = []
+        for i in range(len(self._df)):
+            lista.append(self._profundidade[i])
+        print(lista)
+
     def rqi(self):
         #0,0314 * raiz(Permeabilidade/Porosidade)
-        colunaRQI = 0.0314 * (math.sqrt(self.permeabilidade[0]/self.porosidade1[0]))
-        print(colunaRQI)
+        listaRQI = []
+
+        for i in range(len(self._df)):
+            colunaRQI = 0.0314 * (math.sqrt(self._permeabilidade[i]/self._porosidade1[i]))
+            listaRQI.append(colunaRQI)
+        print(listaRQI)
 
     def phi(self):
         #porosidade/(100-porosidade)
-        phi = self.porosidade[0]/(100 - self.porosidade[0])
-        print(phi*100) #colocar apenas os números antes da vírgula. esse é porcentagem
+        listaPHI = []
 
-
+        for i in range(len(self._df)):
+            phi = self._porosidade[i]/(100 - self._porosidade[i]) * 100
+            listaPHI.append(phi)
+        print(listaPHI)
 
     #depois que conseguir os outros resultados
     def fzi(self):
         #rqi/phi
-        pass
+        phi = AutomatizacaoPlanilha.phi(self)
+        rqi = AutomatizacaoPlanilha.rqi(self)
+
+        print(phi, rqi)
 
     def litofaceis(self):
         pass
 
 teste = AutomatizacaoPlanilha('fruta.xlsx')
-teste.teste()
+teste.fzi()
 
 
