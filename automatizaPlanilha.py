@@ -5,6 +5,8 @@ import math
 #terceira coluna -> permeabilidade(mD)
 #ao invés de criar uma nova aba, eu posso só criar novas colunas na mesma planilha
 #agora preciso criar novas tabelas para colocar os resultados dos def que eu criei para poder fazer
+#verificar o arredondamento da coluna PHI
+
 
 #classse que faz as operações de cada coluna
 class AutomatizacaoPlanilha:
@@ -12,17 +14,29 @@ class AutomatizacaoPlanilha:
         #lê a planilha com o caminho da tabela fornecido pela pessoa e coloca o conteúdo das colunas em variáveis
         df = pd.read_excel(caminho)
         self._df = df
-        self._profundidade = df['Profundidade']
-        self._porosidade = df['Porosity (%)']
-        self._porosidade1 = df['Porosity Decimal']
-        self._permeabilidade = df['Permeability (mD)']
+        self._profundidade = df['Prof. (m)']
+        self._porosidade = df['Porosidade (%)']
+        self._permeabilidade = df['Perm Abs Longitud (mD)']
+
+    def porosidade(self):
+        lista_porosidade = []
+        for i in range(len(self._porosidade)):
+            lista_porosidade.append(round(self._porosidade[i],3))
+        return lista_porosidade
+
+    def porosidadeDec(self):
+        listaPorosidadeDec = []
+        for i in range(len(self._porosidade)):
+            colunaPorosidadeDec = self._porosidade[i]/100
+            listaPorosidadeDec.append(round(colunaPorosidadeDec,3))
+        return listaPorosidadeDec
 
     def rqi(self):
         #0,0314 * raiz(Permeabilidade/Porosidade)
         listaRQI = []
 
         for i in range(len(self._df)):
-            colunaRQI = 0.0314 * (math.sqrt(self._permeabilidade[i]/self._porosidade1[i]))
+            colunaRQI = 0.0314 * (math.sqrt(self._permeabilidade[i]/self.porosidadeDec()[i]))
             listaRQI.append(colunaRQI)
         return(listaRQI)
 
@@ -32,7 +46,7 @@ class AutomatizacaoPlanilha:
 
         for i in range(len(self._df)):
             phi = self._porosidade[i]/(100 - self._porosidade[i]) * 100
-            listaPHI.append(phi)
+            listaPHI.append(round(phi))
         return(listaPHI)
 
     #depois que conseguir os outros resultados
@@ -50,14 +64,14 @@ class AutomatizacaoPlanilha:
     def litofaceis(self):
         pass
 
-    def criaTabela(self):
+    def criaPlanilha(self):
         #self._df['RQI'] = self._porosidade1 * 100
         # for i in range(len(self._df)):
         #    self._df['RQI'][i] = self.rqi()[i]
         colunas = {
             'profundidade': self._profundidade,
-            'porosidade (%)': self._porosidade,
-            'porosidade decimal': self._porosidade1,
+            'porosidade (%)': self.porosidade(),
+            'porosidade decimal': self.porosidadeDec(),
             'permeabilidade': self._permeabilidade,
             'RQI': self.rqi(),
             'PHI': self.phi(),
@@ -68,10 +82,8 @@ class AutomatizacaoPlanilha:
         dfColunas.to_excel('tabela.xlsx', index=False)
         return colunas
 
-    def criaPlanilha(self):
-        pass
 
-teste = AutomatizacaoPlanilha('fruta.xlsx')
-teste.criaTabela()
+teste = AutomatizacaoPlanilha('tabelaDoc.xlsx')
+teste.criaPlanilha()
 
 
