@@ -9,24 +9,13 @@ import math
 #classse que faz as operações de cada coluna
 class AutomatizacaoPlanilha:
     def __init__(self, caminho):
+        #lê a planilha com o caminho da tabela fornecido pela pessoa e coloca o conteúdo das colunas em variáveis
         df = pd.read_excel(caminho)
         self._df = df
         self._profundidade = df['Profundidade']
         self._porosidade = df['Porosity (%)']
         self._porosidade1 = df['Porosity Decimal']
         self._permeabilidade = df['Permeability (mD)']
-
-    def teste(self):
-        dados = {
-            'profundidade': self._profundidade,
-            'porosidade': self._porosidade,
-            'porosidade1': self._porosidade1,
-            'permeabilidade':  self._permeabilidade,
-        }
-        lista = []
-        for i in range(len(self._df)):
-            lista.append(self._profundidade[i])
-        print(lista)
 
     def rqi(self):
         #0,0314 * raiz(Permeabilidade/Porosidade)
@@ -35,7 +24,7 @@ class AutomatizacaoPlanilha:
         for i in range(len(self._df)):
             colunaRQI = 0.0314 * (math.sqrt(self._permeabilidade[i]/self._porosidade1[i]))
             listaRQI.append(colunaRQI)
-        print(listaRQI)
+        return(listaRQI)
 
     def phi(self):
         #porosidade/(100-porosidade)
@@ -44,20 +33,45 @@ class AutomatizacaoPlanilha:
         for i in range(len(self._df)):
             phi = self._porosidade[i]/(100 - self._porosidade[i]) * 100
             listaPHI.append(phi)
-        print(listaPHI)
+        return(listaPHI)
 
     #depois que conseguir os outros resultados
     def fzi(self):
         #rqi/phi
-        phi = AutomatizacaoPlanilha.phi(self)
-        rqi = AutomatizacaoPlanilha.rqi(self)
+        phi = self.phi()
+        rqi = self.rqi()
+        listaFZI = []
 
-        print(phi, rqi)
+        for i in range(len(self._df)):
+            fzi = (rqi[i] / phi[i]) * 100
+            listaFZI.append(fzi)
+        return(listaFZI)
 
     def litofaceis(self):
         pass
 
+    def criaTabela(self):
+        #self._df['RQI'] = self._porosidade1 * 100
+        # for i in range(len(self._df)):
+        #    self._df['RQI'][i] = self.rqi()[i]
+        colunas = {
+            'profundidade': self._profundidade,
+            'porosidade (%)': self._porosidade,
+            'porosidade decimal': self._porosidade1,
+            'permeabilidade': self._permeabilidade,
+            'RQI': self.rqi(),
+            'PHI': self.phi(),
+            'FZI': self.fzi()
+        }
+        dfColunas = pd.DataFrame(colunas)
+        print(dfColunas)
+        dfColunas.to_excel('tabela.xlsx', index=False)
+        return colunas
+
+    def criaPlanilha(self):
+        pass
+
 teste = AutomatizacaoPlanilha('fruta.xlsx')
-teste.fzi()
+teste.criaTabela()
 
 
