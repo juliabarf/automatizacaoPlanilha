@@ -1,4 +1,5 @@
 import pandas as pd
+import xlsxwriter
 import math
 #primeira coluna -> profundidade
 #segunda coluna -> porosidade(decimal) = 0.192
@@ -14,14 +15,18 @@ class AutomatizacaoPlanilha:
         #lê a planilha com o caminho da tabela fornecido pela pessoa e coloca o conteúdo das colunas em variáveis
         df = pd.read_excel(caminho)
         self._df = df
+        convert_dic = {'Prof. (m)': float}
+        self._df = self._df.astype(convert_dic)
         self._profundidade = df['Prof. (m)']
         self._porosidade = df['Porosidade (%)']
         self._permeabilidade = df['Perm Abs Longitud (mD)']
 
+
+
     def porosidade(self):
         lista_porosidade = []
         for i in range(len(self._porosidade)):
-            lista_porosidade.append(round(self._porosidade[i],3))
+            lista_porosidade.append(self._porosidade[i])
         return lista_porosidade
 
     def porosidadeDec(self):
@@ -68,19 +73,33 @@ class AutomatizacaoPlanilha:
         #self._df['RQI'] = self._porosidade1 * 100
         # for i in range(len(self._df)):
         #    self._df['RQI'][i] = self.rqi()[i]
+
         colunas = {
-            'profundidade': self._profundidade,
-            'porosidade (%)': self.porosidade(),
-            'porosidade decimal': self.porosidadeDec(),
-            'permeabilidade': self._permeabilidade,
+            'Profundidade': self._profundidade,
+            'Porosity (%)': self.porosidade(),
+            'Porosity Decimal': self.porosidadeDec(),
+            'Permeability (mD)': self._permeabilidade,
             'RQI': self.rqi(),
-            'PHI': self.phi(),
+            'PHI(Z)': self.phi(),
             'FZI': self.fzi()
         }
         dfColunas = pd.DataFrame(colunas)
-        print(dfColunas)
-        dfColunas.to_excel('tabela.xlsx', index=False)
-        return colunas
+
+        writer = pd.ExcelWriter('tabela.xlsx', engine='xlsxwriter')
+
+        dfColunas.to_excel(writer, sheet_name='Planilha1', index=False)
+
+        workbook = writer.book
+        worksheet = writer.sheets['Planilha1']
+
+        worksheet.set_column('A:A', 20)
+        worksheet.set_column('B:B', 20)
+        worksheet.set_column('C:C', 20)
+        worksheet.set_column('D:D', 20)
+        worksheet.set_column('E:E', 15)
+        worksheet.set_column('G:G', 15)
+
+        writer.close()
 
 
 teste = AutomatizacaoPlanilha('tabelaDoc.xlsx')
