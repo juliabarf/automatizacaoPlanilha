@@ -130,6 +130,8 @@ def selecionar_arquivo():
 janela = tk.Tk()
 janela.title("Selecionar Arquivo")
 
+
+
 # Criar o botão
 botao_selecionar = tk.Button(janela, text="Selecionar Arquivo", command=selecionar_arquivo)
 botao_selecionar.pack()
