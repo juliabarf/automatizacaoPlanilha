@@ -94,6 +94,11 @@ class AutomatizacaoPlanilha:
             for row in range(1, len(dfColunas) + 1):
                 worksheet.write(row, col_num, dfColunas.iloc[row - 1, col_num], cell_format)
 
+        #colore as células
+        #style = self._profundidade.style.set_properties(**{'background-color': 'red', 'color': 'white'})
+
+
+
         # Define largura das colunas
         worksheet.set_column('A:A', 20)
         worksheet.set_column('B:B', 20)
@@ -102,6 +107,8 @@ class AutomatizacaoPlanilha:
         worksheet.set_column('E:E', 15)
         worksheet.set_column('F:F', 15)
         worksheet.set_column('G:G', 15)
+
+
 
         writer.close()
 

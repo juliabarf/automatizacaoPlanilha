@@ -87,7 +87,6 @@ class AutomatizacaoPlanilha:
 
         writer = pd.ExcelWriter('tabela.xlsx', engine='xlsxwriter')
         dfColunas.to_excel(writer, sheet_name='Planilha1', index=False)
-
         workbook = writer.book
         worksheet = writer.sheets['Planilha1']
 
@@ -111,8 +110,5 @@ class AutomatizacaoPlanilha:
 
         writer.close()
 
-
-teste = AutomatizacaoPlanilha('tabelaDoc.xlsx')
-teste.criaPlanilha()
 
 
