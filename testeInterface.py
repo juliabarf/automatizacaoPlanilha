@@ -1,4 +1,5 @@
 import tkinter as tk
+from tkinter import LEFT
 from tkinter import filedialog
 import pandas as pd
 import xlsxwriter
@@ -104,6 +105,8 @@ class AutomatizacaoPlanilha:
 
         writer.close()
 
+
+#chama esta função para o botão
 def selecionar_arquivo():
     """
     Função que abre uma caixa de diálogo para selecionar um arquivo
@@ -112,22 +115,53 @@ def selecionar_arquivo():
     arquivo = filedialog.askopenfilename()
     if arquivo:
         print("Arquivo selecionado:", arquivo)
-        teste = AutomatizacaoPlanilha(arquivo)
-        teste.criaPlanilha()
+        AutomatizacaoPlanilha(arquivo).criaPlanilha()
 
 
+class Aplicativo:
+    def __init__(self, master = None):
+        #container para o texto de atenção
+        self.primeiroContainer = tk.Frame(master)
+        self.primeiroContainer['pady'] = 10
+        self.primeiroContainer['padx'] = 100
+        self.primeiroContainer.pack()
+
+        #container para o botão
+        self.segundoContainer = tk.Frame(master)
+        self.segundoContainer['pady'] = 10
+        self.segundoContainer.pack()
+
+        """
+        self.terceiroContainer = tk.Frame(master)
+        self.terceiroContainer['pady'] = 10
+        self.terceiroContainer.pack(anchor='w')
+        """
+
+        #texto de atenção
+        self.titulo = tk.Label(self.primeiroContainer, text=' Antes de selecionar o arquivo, observe\n se a planilha contém as seguintes colunas:\n \nProf. (m) \nPorosidade (%) \nPerm Abs Longitud (md)')
+        self.titulo.pack()
+
+        """
+        #texto parte 2
+        self.titulo2 = tk.Label(self.terceiroContainer, text='Prof.')
+        self.titulo2.pack(anchor='w')
+        """
+
+        #botão - arquivo
+        self.btnArquivo = tk.Button(self.segundoContainer, text='Selecionar arquivo', width='25', command=selecionar_arquivo)
+        self.btnArquivo.pack()
 
 
+#cria a janela principal
+#janela = tk.Tk()
+#janela.title("Selecionar Arquivo")
 
-# Criar a janela principal
-janela = tk.Tk()
-janela.title("Selecionar Arquivo")
+#cria o botão
+#botao_selecionar = tk.Button(janela, text="Selecionar Arquivo", command=selecionar_arquivo)
+#botao_selecionar.pack()
 
-
-
-# Criar o botão
-botao_selecionar = tk.Button(janela, text="Selecionar Arquivo", command=selecionar_arquivo)
-botao_selecionar.pack()
-
-# Executar a janela
-janela.mainloop()
+#executa
+# a janela
+root = tk.Tk()
+app = Aplicativo(root)
+root.mainloop()
