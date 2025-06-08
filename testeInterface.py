@@ -5,6 +5,8 @@ import pandas as pd
 import xlsxwriter
 import math
 
+from openpyxl.styles.builtins import title
+
 
 class AutomatizacaoPlanilha:
     def __init__(self, arquivo):
@@ -70,7 +72,7 @@ class AutomatizacaoPlanilha:
 
         colunas = {
             'Profundidade': self._profundidade,
-            'Porosity (%)': self.porosidade(),
+            'Porosity (%)': [f"{round(p, 2)}%" for p in self.porosidade()],
             'Porosity Decimal': self.porosidadeDec(),
             'Permeability (mD)': self._permeabilidade,
             'RQI': self.rqi(),
@@ -85,19 +87,42 @@ class AutomatizacaoPlanilha:
         workbook = writer.book
         worksheet = writer.sheets['Planilha1']
 
-        # Define a centralização das células na horizontal e vertical
+        # Define formatação para células
         cell_format = workbook.add_format({'align': 'center', 'valign': 'vcenter'})
+        decimal_format = workbook.add_format({'num_format': '0.000', 'align': 'center', 'valign': 'vcenter'})
+        decimal_format2 = workbook.add_format({'num_format': '0.00', 'align': 'center', 'valign': 'vcenter'})
 
-        # Aplica o formato nas células da planilha
+        # Lista de colunas que devem receber formatação com 3 casas decimais
+        colunas_com_decimal = ['Porosity Decimal', 'Profundidade', 'Permeability (mD)']
+        coluna2_dec = ['Porosity (%)']
+
+        # Escreve os dados com a formatação apropriada
         for col_num, value in enumerate(dfColunas.columns.values):
             worksheet.write(0, col_num, value, cell_format)
             for row in range(1, len(dfColunas) + 1):
-                worksheet.write(row, col_num, dfColunas.iloc[row - 1, col_num], cell_format)
+                valor = dfColunas.iloc[row - 1, col_num]
+
+                if value in colunas_com_decimal:
+                    worksheet.write(row, col_num, valor, decimal_format)
+                elif value in coluna2_dec:
+                    worksheet.write(row, col_num, valor, decimal_format2)
+                else:
+                    worksheet.write(row, col_num, valor, cell_format)
+
+        # Cabeçalhos coloridos (apenas "FZI", "RQI", "Profundidade")
+        for col_num, value in enumerate(dfColunas.columns.values):
+            if value == 'FZI' or value == 'RQI' or value == 'PHI(Z)':
+                worksheet.write(0, col_num, value,
+                                workbook.add_format({'align': 'center', 'valign': 'vcenter', 'bg_color': '#FFFF99'}))
+
+            elif value == 'Profundidade' or value == 'Porosity (%)' or value == 'Porosity Decimal' or value == 'Permeability (mD)':
+                worksheet.write(0, col_num, value,
+                                workbook.add_format({'align': 'center', 'valign': 'vcenter', 'bg_color': '#FFCCCC'}))
+            else:
+                worksheet.write(0, col_num, value, cell_format)
 
         #colore as células
         #style = self._profundidade.style.set_properties(**{'background-color': 'red', 'color': 'white'})
-
-
 
         # Define largura das colunas
         worksheet.set_column('A:A', 20)
@@ -170,5 +195,6 @@ class Aplicativo:
 #executa
 # a janela
 root = tk.Tk()
+root.title('Mudou')
 app = Aplicativo(root)
 root.mainloop()
