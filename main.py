@@ -4,14 +4,14 @@ from tkinter import filedialog
 import pandas as pd
 import xlsxwriter
 import math
-
 from openpyxl.styles.builtins import title
-
 
 class AutomatizacaoPlanilha:
     def __init__(self, arquivo):
         # lê a planilha com o caminho da tabela fornecido pela pessoa e coloca o conteúdo das colunas em variáveis
         df = pd.read_excel(arquivo)
+        nomeTabela = arquivo.split('.')[0]
+        self.nomeTabela = nomeTabela
         self._df = df
         convert_dic = {'Prof. (m)': float}
         self._df = self._df.astype(convert_dic)
@@ -64,7 +64,6 @@ class AutomatizacaoPlanilha:
 
     def ghe(self):
         fzi = self.fzi()
-        print(fzi)
         listaGHE = []
         for i in range(len(fzi)):
             if fzi[i] >= 0.0938 and fzi[i] < 0.1875:
@@ -87,7 +86,6 @@ class AutomatizacaoPlanilha:
                 listaGHE.append(9)
             elif fzi[i] >= 48.0:
                 listaGHE.append(10)
-        print(listaGHE)
         return (listaGHE)
 
     def criaPlanilha(self):
@@ -107,8 +105,9 @@ class AutomatizacaoPlanilha:
         }
         dfColunas = pd.DataFrame(colunas)
 
-        writer = pd.ExcelWriter('tabela.xlsx', engine='xlsxwriter')
+        writer = pd.ExcelWriter(self.nomeTabela+'Alterada.xlsx', engine='xlsxwriter')
         dfColunas.to_excel(writer, sheet_name='Planilha1', index=False)
+
 
         workbook = writer.book
         worksheet = writer.sheets['Planilha1']
@@ -118,7 +117,7 @@ class AutomatizacaoPlanilha:
         decimal_format = workbook.add_format({'num_format': '0.000', 'align': 'center', 'valign': 'vcenter'})
         decimal_format2 = workbook.add_format({'num_format': '0.00', 'align': 'center', 'valign': 'vcenter'})
 
-        # Lista de colunas que devem receber formatação com 3 casas decimais
+        # Lista de colunas que devem receber formatação com 3 e 2 casas decimais
         colunas_com_decimal = ['Porosity Decimal', 'Profundidade', 'Permeability (mD)']
         coluna2_dec = ['Porosity (%)']
 
@@ -135,9 +134,9 @@ class AutomatizacaoPlanilha:
                 else:
                     worksheet.write(row, col_num, valor, cell_format)
 
-        # Cabeçalhos coloridos (apenas "FZI", "RQI", "Profundidade")
+        # Cabeçalhos coloridos ( "FZI", "RQI", "")
         for col_num, value in enumerate(dfColunas.columns.values):
-            if value == 'FZI' or value == 'RQI' or value == 'PHI(Z)':
+            if value == 'FZI' or value == 'RQI' or value == 'PHI(Z)' or value == 'GHE':
                 worksheet.write(0, col_num, value,
                                 workbook.add_format({'align': 'center', 'valign': 'vcenter', 'bg_color': '#FFFF99'}))
 
@@ -159,9 +158,8 @@ class AutomatizacaoPlanilha:
         worksheet.set_column('F:F', 15)
         worksheet.set_column('G:G', 15)
 
-
-
         writer.close()
+
 
 
 #chama esta função para o botão
@@ -172,8 +170,9 @@ def selecionar_arquivo():
     """
     arquivo = filedialog.askopenfilename()
     if arquivo:
-        print("Arquivo selecionado:", arquivo)
+        print("Arquivo criado com sucesso!")
         AutomatizacaoPlanilha(arquivo).criaPlanilha()
+
 
 
 class Aplicativo:
@@ -189,21 +188,9 @@ class Aplicativo:
         self.segundoContainer['pady'] = 10
         self.segundoContainer.pack()
 
-        """
-        self.terceiroContainer = tk.Frame(master)
-        self.terceiroContainer['pady'] = 10
-        self.terceiroContainer.pack(anchor='w')
-        """
-
         #texto de atenção
         self.titulo = tk.Label(self.primeiroContainer, text=' Antes de selecionar o arquivo, observe\n se a planilha contém as seguintes colunas:\n \nProf. (m) \nPorosidade (%) \nPerm Abs Longitud (md)')
         self.titulo.pack()
-
-        """
-        #texto parte 2
-        self.titulo2 = tk.Label(self.terceiroContainer, text='Prof.')
-        self.titulo2.pack(anchor='w')
-        """
 
         #botão - arquivo
         self.btnArquivo = tk.Button(self.segundoContainer, text='Selecionar arquivo', width='25', command=selecionar_arquivo)
@@ -225,4 +212,4 @@ root.title('Planilhas Lagesed')
 app = Aplicativo(root)
 root.mainloop()
 
-AutomatizacaoPlanilha('tabelaDoc.xlsx').ghe()
+#AutomatizacaoPlanilha('tabelaDoc.xlsx').ghe()
