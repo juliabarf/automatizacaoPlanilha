@@ -1,0 +1,260 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="75589cc1-a0da-4129-b714-131511b953a8" name="Changes" comment="organiza tabela" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Python Script" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;juliabarf&quot;
+  }
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/juliabarf/automatizacaoPlanilha.git&quot;,
+    &quot;accountId&quot;: &quot;2dbbdeb8-f892-47c4-bc76-00d01b3e1f02&quot;
+  }
+}</component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 3
+}</component>
+  <component name="ProjectId" id="2y0CippX12JTV7icHx5au4acfhT" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;Python.automatizaPlanilha.executor&quot;: &quot;Run&quot;,
+    &quot;Python.celula.executor&quot;: &quot;Run&quot;,
+    &quot;Python.customCelula.executor&quot;: &quot;Run&quot;,
+    &quot;Python.fruta.executor&quot;: &quot;Run&quot;,
+    &quot;Python.teste.executor&quot;: &quot;Run&quot;,
+    &quot;Python.teste1.executor&quot;: &quot;Run&quot;,
+    &quot;Python.teste2.executor&quot;: &quot;Run&quot;,
+    &quot;Python.teste3.executor&quot;: &quot;Run&quot;,
+    &quot;Python.testeInterface.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;settings.sync&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  }
+}</component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-js-predefined-d6986cc7102b-6a121458b545-JavaScript-PY-251.25410.159" />
+        <option value="bundled-python-sdk-e0ed3721d81e-36ea0e71a18c-com.jetbrains.pycharm.pro.sharedIndexes.bundled-PY-251.25410.159" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="SvnConfiguration">
+    <configuration>C:\Users\JuliaBarbosa\AppData\Roaming\Subversion</configuration>
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="75589cc1-a0da-4129-b714-131511b953a8" name="Changes" comment="" />
+      <created>1748962233862</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1748962233862</updated>
+      <workItem from="1748962234891" duration="55049000" />
+      <workItem from="1749571277541" duration="607000" />
+      <workItem from="1749572379922" duration="1785000" />
+      <workItem from="1749581492648" duration="27000" />
+      <workItem from="1749581554421" duration="316000" />
+    </task>
+    <task id="LOCAL-00001" summary="cria projeto de automatização de planilhas">
+      <option name="closed" value="true" />
+      <created>1748962301999</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1748962301999</updated>
+    </task>
+    <task id="LOCAL-00002" summary="lê planilha teste">
+      <option name="closed" value="true" />
+      <created>1748965090773</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1748965090773</updated>
+    </task>
+    <task id="LOCAL-00003" summary="lê planilha teste">
+      <option name="closed" value="true" />
+      <created>1748965108858</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1748965108858</updated>
+    </task>
+    <task id="LOCAL-00004" summary="lê planilha teste">
+      <option name="closed" value="true" />
+      <created>1748975394636</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1748975394636</updated>
+    </task>
+    <task id="LOCAL-00005" summary="extrai dados da planilha&#10;cria variáveis para os atributos da planilha">
+      <option name="closed" value="true" />
+      <created>1748975456172</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1748975456172</updated>
+    </task>
+    <task id="LOCAL-00006" summary="adiciona def teste para adicionar os elementos dentro de um dicionário">
+      <option name="closed" value="true" />
+      <created>1748976660882</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1748976660882</updated>
+    </task>
+    <task id="LOCAL-00007" summary="comentarios com os próximos passos do projeto">
+      <option name="closed" value="true" />
+      <created>1748978837628</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1748978837628</updated>
+    </task>
+    <task id="LOCAL-00008" summary="cria tabelas em uma nova planilha com os dados atualizados">
+      <option name="closed" value="true" />
+      <created>1749062179215</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1749062179215</updated>
+    </task>
+    <task id="LOCAL-00009" summary="&#10;ajeita a porcentagem&#10;arredonda as os valores da tabela PHI">
+      <option name="closed" value="true" />
+      <created>1749067328538</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1749067328538</updated>
+    </task>
+    <task id="LOCAL-00010" summary="versão rústica pronta com a lógica já aplicada. &#10;adiciona dois arquivos de teste para customizar tabelas">
+      <option name="closed" value="true" />
+      <created>1749128753348</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1749128753348</updated>
+    </task>
+    <task id="LOCAL-00011" summary="adiciona tela do aplicativo">
+      <option name="closed" value="true" />
+      <created>1749149285404</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1749149285404</updated>
+    </task>
+    <task id="LOCAL-00012" summary="adiciona tela do aplicativo">
+      <option name="closed" value="true" />
+      <created>1749150267674</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1749150267674</updated>
+    </task>
+    <task id="LOCAL-00013" summary="conserta lógica para chamar a classe AutomatizaPlanilha">
+      <option name="closed" value="true" />
+      <created>1749150602139</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1749150602139</updated>
+    </task>
+    <task id="LOCAL-00014" summary="atualiza interface do aplicativo">
+      <option name="closed" value="true" />
+      <created>1749222216810</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1749222216810</updated>
+    </task>
+    <task id="LOCAL-00015" summary="atualiza interface do aplicativo">
+      <option name="closed" value="true" />
+      <created>1749233553444</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1749233553444</updated>
+    </task>
+    <task id="LOCAL-00016" summary="adiciona tabela GHE">
+      <option name="closed" value="true" />
+      <created>1749572478289</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1749572478289</updated>
+    </task>
+    <task id="LOCAL-00017" summary="organiza tabela">
+      <option name="closed" value="true" />
+      <created>1749581821621</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1749581821621</updated>
+    </task>
+    <option name="localTasksCounter" value="18" />
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="cria projeto de automatização de planilhas" />
+    <MESSAGE value="lê planilha teste" />
+    <MESSAGE value="extrai dados da planilha&#10;cria variáveis para os atributos da planilha" />
+    <MESSAGE value="adiciona def teste para adicionar os elementos dentro de um dicionário" />
+    <MESSAGE value="comentarios com os próximos passos do projeto" />
+    <MESSAGE value="cria tabelas em uma nova planilha com os dados atualizados" />
+    <MESSAGE value="&#10;ajeita a porcentagem&#10;arredonda as os valores da tabela PHI" />
+    <MESSAGE value="versão rústica pronta com a lógica já aplicada. &#10;adiciona dois arquivos de teste para customizar tabelas" />
+    <MESSAGE value="adiciona tela do aplicativo" />
+    <MESSAGE value="conserta lógica para chamar a classe AutomatizaPlanilha" />
+    <MESSAGE value="atualiza interface do aplicativo" />
+    <MESSAGE value="adiciona tabela GHE" />
+    <MESSAGE value="organiza tabela" />
+    <option name="LAST_COMMIT_MESSAGE" value="organiza tabela" />
+  </component>
+  <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/automatizacaoPlanilha$fruta.coverage" NAME="fruta Coverage Results" MODIFIED="1748965496975" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/automatizacaoPlanilha$teste3.coverage" NAME="teste3 Coverage Results" MODIFIED="1749128935072" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/automatizacaoPlanilha$teste1.coverage" NAME="teste1 Coverage Results" MODIFIED="1748964967178" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/.venv" />
+    <SUITE FILE_PATH="coverage/automatizacaoPlanilha$customCelula.coverage" NAME="customCelula Coverage Results" MODIFIED="1749232682756" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/automatizacaoPlanilha$celula.coverage" NAME="celula Coverage Results" MODIFIED="1749147100750" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/automatizacaoPlanilha$teste.coverage" NAME="teste Coverage Results" MODIFIED="1749127733436" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/automatizacaoPlanilha$teste2.coverage" NAME="teste2 Coverage Results" MODIFIED="1749128132697" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/automatizacaoPlanilha$automatizaPlanilha.coverage" NAME="automatizaPlanilha Coverage Results" MODIFIED="1749233186622" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/automatizacaoPlanilha$testeInterface.coverage" NAME="testeInterface Coverage Results" MODIFIED="1749572430156" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+  </component>
+</project>
