@@ -1,6 +1,6 @@
 import tkinter as tk
 from tkinter import LEFT
-from tkinter import filedialog
+from tkinter import filedialog, messagebox
 import pandas as pd
 import xlsxwriter
 import math
@@ -170,6 +170,7 @@ def selecionar_arquivo():
     """
     arquivo = filedialog.askopenfilename()
     if arquivo:
+        messagebox.showinfo('Processo concluído.', ' Sua planilha foi criada com sucesso!',)
         print("Arquivo criado com sucesso!")
         AutomatizacaoPlanilha(arquivo).criaPlanilha()
 
@@ -209,6 +210,7 @@ class Aplicativo:
 # a janela
 root = tk.Tk()
 root.title('Planilhas Lagesed')
+#root.iconbitmap('media/iconApp.ico')
 app = Aplicativo(root)
 root.mainloop()
 
