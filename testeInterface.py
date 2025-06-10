@@ -62,8 +62,33 @@ class AutomatizacaoPlanilha:
             listaFZI.append(fzi)
         return (listaFZI)
 
-    def litofaceis(self):
-        pass
+    def ghe(self):
+        fzi = self.fzi()
+        print(fzi)
+        listaGHE = []
+        for i in range(len(fzi)):
+            if fzi[i] >= 0.0938 and fzi[i] < 0.1875:
+                print(listaGHE.append(1))
+            elif fzi[i] >= 0.1875 and fzi[i] < 0.375:
+                listaGHE.append(2)
+            elif fzi[i] >= 0.375 and fzi[i] < 0.75:
+                listaGHE.append(3)
+            elif fzi[i] >= 0.75 and fzi[i] < 1.5:
+                listaGHE.append(4)
+            elif fzi[i] >= 1.5 and fzi[i] < 3.0:
+                listaGHE.append(5)
+            elif fzi[i] >= 3.0 and fzi[i] < 6.0:
+                listaGHE.append(6)
+            elif fzi[i] >= 6.0 and fzi[i] < 12.0:
+                listaGHE.append(7)
+            elif fzi[i] >= 12.0 and fzi[i] < 24.0:
+                listaGHE.append(8)
+            elif fzi[i] >= 24.0 and fzi[i] < 48.0:
+                listaGHE.append(9)
+            elif fzi[i] >= 48.0:
+                listaGHE.append(10)
+        print(listaGHE)
+        return (listaGHE)
 
     def criaPlanilha(self):
         # self._df['RQI'] = self._porosidade1 * 100
@@ -77,7 +102,8 @@ class AutomatizacaoPlanilha:
             'Permeability (mD)': self._permeabilidade,
             'RQI': self.rqi(),
             'PHI(Z)': self.phi(),
-            'FZI': self.fzi()
+            'FZI': self.fzi(),
+            'GHE': self.ghe()
         }
         dfColunas = pd.DataFrame(colunas)
 
@@ -195,6 +221,8 @@ class Aplicativo:
 #executa
 # a janela
 root = tk.Tk()
-root.title('Mudou')
+root.title('Planilhas Lagesed')
 app = Aplicativo(root)
 root.mainloop()
+
+AutomatizacaoPlanilha('tabelaDoc.xlsx').ghe()
