@@ -45,7 +45,7 @@ class AutomatizacaoPlanilha:
                     listaRQI.append(0)
                 else:
                     colunaRQI = 0.0314 * math.sqrt(permeabilidade / porosidade_dec)
-                    listaRQI.append(colunaRQI)
+                    listaRQI.append((colunaRQI))
 
             except (ValueError, TypeError, ZeroDivisionError):
                 listaRQI.append(0)
@@ -60,7 +60,7 @@ class AutomatizacaoPlanilha:
                     listaPHI.append(0)
                 else:
                     phi = porosidade / (100 - porosidade) * 100
-                    listaPHI.append(round(phi))
+                    listaPHI.append((phi))
             except (ValueError, TypeError, ZeroDivisionError):
                 listaPHI.append(0)
         return listaPHI
@@ -80,7 +80,7 @@ class AutomatizacaoPlanilha:
                     listaFZI.append(0)
                 else:
                     fzi = (valor_rqi / valor_phi) * 100
-                    listaFZI.append(fzi)
+                    listaFZI.append(round(fzi, 4))
             except (ValueError, TypeError, ZeroDivisionError, IndexError):
                 listaFZI.append(0)
         return listaFZI
@@ -92,7 +92,9 @@ class AutomatizacaoPlanilha:
         for i in range(len(self._df)):
             try:
                 valor = fzi[i]
-                if valor >= 0.0938 and valor < 0.1875:
+                if valor < 0.0938:
+                    listaGHE.append(0)
+                elif valor >= 0.0938 and valor < 0.1875:
                     listaGHE.append(1)
                 elif valor >= 0.1875 and valor < 0.375:
                     listaGHE.append(2)
@@ -148,10 +150,14 @@ class AutomatizacaoPlanilha:
         cell_format = workbook.add_format({'align': 'center', 'valign': 'vcenter'})
         decimal_format = workbook.add_format({'num_format': '0.000', 'align': 'center', 'valign': 'vcenter'})
         decimal_format2 = workbook.add_format({'num_format': '0.00', 'align': 'center', 'valign': 'vcenter'})
+        decimal_format3 = workbook.add_format({'num_format': '0.0000', 'align': 'center', 'valign': 'vcenter'})
+        decimal_format4 = workbook.add_format({'num_format': '0', 'align': 'center', 'valign': 'vcenter'})
 
         # Lista de colunas que devem receber formatação com 3 e 2 casas decimais
         colunas_com_decimal = ['Porosity Decimal', 'Profundidade', 'Permeability (mD)']
         coluna2_dec = ['Porosity (%)']
+        coluna3_dec = ['RQI','FZI']
+        colunaPHI = ['PHI(Z)']
 
         # Escreve os dados com a formatação apropriada
         for col_num, value in enumerate(dfColunas.columns.values):
@@ -163,6 +169,11 @@ class AutomatizacaoPlanilha:
                     worksheet.write(row, col_num, valor, decimal_format)
                 elif value in coluna2_dec:
                     worksheet.write(row, col_num, valor, decimal_format2)
+                elif value in coluna3_dec:
+                    worksheet.write(row, col_num, valor, decimal_format3)
+                elif value in colunaPHI:
+                    worksheet.write(row, col_num, valor, decimal_format4)
+
                 else:
                     worksheet.write(row, col_num, valor, cell_format)
 
