@@ -2,6 +2,9 @@ import tkinter as tk
 from tkinter import filedialog, messagebox
 import pandas as pd
 import math
+import xlsxwriter
+
+
 
 
 
@@ -132,6 +135,7 @@ class AutomatizacaoPlanilha:
             'GHE': self.ghe()
         }
         dfColunas = pd.DataFrame(colunas)
+        dfColunas = dfColunas.fillna(0)  # substitui células vazias por 0
 
         writer = pd.ExcelWriter(self.nomeTabela+'Alterada.xlsx', engine='xlsxwriter')
         dfColunas.to_excel(writer, sheet_name='Planilha1', index=False)
