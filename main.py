@@ -32,60 +32,89 @@ class AutomatizacaoPlanilha:
         return listaPorosidadeDec
 
     def rqi(self):
-        # 0,0314 * raiz(Permeabilidade/Porosidade)
         listaRQI = []
-
         for i in range(len(self._df)):
-            colunaRQI = 0.0314 * (math.sqrt(self._permeabilidade[i] / self.porosidadeDec()[i]))
-            listaRQI.append(colunaRQI)
-        return (listaRQI)
+            try:
+                permeabilidade = float(self._permeabilidade[i])
+                porosidade_dec = float(self.porosidadeDec()[i])
+
+                if pd.isna(permeabilidade) or pd.isna(porosidade_dec) or permeabilidade == 0 or porosidade_dec == 0:
+                    listaRQI.append(0)
+                else:
+                    colunaRQI = 0.0314 * math.sqrt(permeabilidade / porosidade_dec)
+                    listaRQI.append(colunaRQI)
+
+            except (ValueError, TypeError, ZeroDivisionError):
+                listaRQI.append(0)
+        return listaRQI
 
     def phi(self):
-        # porosidade/(100-porosidade)
         listaPHI = []
-
         for i in range(len(self._df)):
-            phi = self._porosidade[i] / (100 - self._porosidade[i]) * 100
-            listaPHI.append(round(phi))
-        return (listaPHI)
+            try:
+                porosidade = float(self._porosidade[i])
+                if pd.isna(porosidade) or porosidade == 0 or porosidade == 100:
+                    listaPHI.append(0)
+                else:
+                    phi = porosidade / (100 - porosidade) * 100
+                    listaPHI.append(round(phi))
+            except (ValueError, TypeError, ZeroDivisionError):
+                listaPHI.append(0)
+        return listaPHI
 
     # depois que conseguir os outros resultados
     def fzi(self):
-        # rqi/phi
         phi = self.phi()
         rqi = self.rqi()
         listaFZI = []
 
         for i in range(len(self._df)):
-            fzi = (rqi[i] / phi[i]) * 100
-            listaFZI.append(fzi)
-        return (listaFZI)
+            try:
+                valor_phi = float(phi[i])
+                valor_rqi = float(rqi[i])
+
+                if pd.isna(valor_phi) or valor_phi == 0:
+                    listaFZI.append(0)
+                else:
+                    fzi = (valor_rqi / valor_phi) * 100
+                    listaFZI.append(fzi)
+            except (ValueError, TypeError, ZeroDivisionError, IndexError):
+                listaFZI.append(0)
+        return listaFZI
 
     def ghe(self):
         fzi = self.fzi()
         listaGHE = []
-        for i in range(len(fzi)):
-            if fzi[i] >= 0.0938 and fzi[i] < 0.1875:
-                print(listaGHE.append(1))
-            elif fzi[i] >= 0.1875 and fzi[i] < 0.375:
-                listaGHE.append(2)
-            elif fzi[i] >= 0.375 and fzi[i] < 0.75:
-                listaGHE.append(3)
-            elif fzi[i] >= 0.75 and fzi[i] < 1.5:
-                listaGHE.append(4)
-            elif fzi[i] >= 1.5 and fzi[i] < 3.0:
-                listaGHE.append(5)
-            elif fzi[i] >= 3.0 and fzi[i] < 6.0:
-                listaGHE.append(6)
-            elif fzi[i] >= 6.0 and fzi[i] < 12.0:
-                listaGHE.append(7)
-            elif fzi[i] >= 12.0 and fzi[i] < 24.0:
-                listaGHE.append(8)
-            elif fzi[i] >= 24.0 and fzi[i] < 48.0:
-                listaGHE.append(9)
-            elif fzi[i] >= 48.0:
-                listaGHE.append(10)
-        return (listaGHE)
+
+        for i in range(len(self._df)):
+            try:
+                valor = fzi[i]
+                if valor >= 0.0938 and valor < 0.1875:
+                    listaGHE.append(1)
+                elif valor >= 0.1875 and valor < 0.375:
+                    listaGHE.append(2)
+                elif valor >= 0.375 and valor < 0.75:
+                    listaGHE.append(3)
+                elif valor >= 0.75 and valor < 1.5:
+                    listaGHE.append(4)
+                elif valor >= 1.5 and valor < 3.0:
+                    listaGHE.append(5)
+                elif valor >= 3.0 and valor < 6.0:
+                    listaGHE.append(6)
+                elif valor >= 6.0 and valor < 12.0:
+                    listaGHE.append(7)
+                elif valor >= 12.0 and valor < 24.0:
+                    listaGHE.append(8)
+                elif valor >= 24.0 and valor < 48.0:
+                    listaGHE.append(9)
+                elif valor >= 48.0:
+                    listaGHE.append(10)
+                else:
+                    listaGHE.append(0)
+            except (IndexError, ValueError, TypeError):
+                listaGHE.append(0)
+
+        return listaGHE
 
     def criaPlanilha(self):
         # self._df['RQI'] = self._porosidade1 * 100
