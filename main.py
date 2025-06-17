@@ -4,10 +4,6 @@ import pandas as pd
 import math
 import xlsxwriter
 
-
-
-
-
 class AutomatizacaoPlanilha:
     def __init__(self, arquivo):
         # lê a planilha com o caminho da tabela fornecido pela pessoa e coloca o conteúdo das colunas em variáveis
@@ -60,7 +56,7 @@ class AutomatizacaoPlanilha:
                     listaPHI.append(0)
                 else:
                     phi = porosidade / (100 - porosidade) * 100
-                    listaPHI.append((phi))
+                    listaPHI.append(round(phi))
             except (ValueError, TypeError, ZeroDivisionError):
                 listaPHI.append(0)
         return listaPHI
@@ -128,11 +124,11 @@ class AutomatizacaoPlanilha:
 
         colunas = {
             'Profundidade': self._profundidade,
-            'Porosity (%)': [f"{round(p, 2)}%" for p in self.porosidade()],
+            'Porosity (%)': self.porosidade(),
             'Porosity Decimal': self.porosidadeDec(),
             'Permeability (mD)': self._permeabilidade,
             'RQI': self.rqi(),
-            'PHI(Z)': self.phi(),
+            'PHI(Z)': [f"{round(p, 2)}%" for p in self.phi()],
             'FZI': self.fzi(),
             'GHE': self.ghe()
         }
@@ -149,13 +145,11 @@ class AutomatizacaoPlanilha:
         # Define formatação para células
         cell_format = workbook.add_format({'align': 'center', 'valign': 'vcenter'})
         decimal_format = workbook.add_format({'num_format': '0.000', 'align': 'center', 'valign': 'vcenter'})
-        decimal_format2 = workbook.add_format({'num_format': '0.00', 'align': 'center', 'valign': 'vcenter'})
         decimal_format3 = workbook.add_format({'num_format': '0.0000', 'align': 'center', 'valign': 'vcenter'})
         decimal_format4 = workbook.add_format({'num_format': '0', 'align': 'center', 'valign': 'vcenter'})
 
         # Lista de colunas que devem receber formatação com 3 e 2 casas decimais
-        colunas_com_decimal = ['Porosity Decimal', 'Profundidade', 'Permeability (mD)']
-        coluna2_dec = ['Porosity (%)']
+        colunas_com_decimal = ['Porosity Decimal', 'Profundidade', 'Permeability (mD)', 'Porosity (%)']
         coluna3_dec = ['RQI','FZI']
         colunaPHI = ['PHI(Z)']
 
@@ -167,8 +161,6 @@ class AutomatizacaoPlanilha:
 
                 if value in colunas_com_decimal:
                     worksheet.write(row, col_num, valor, decimal_format)
-                elif value in coluna2_dec:
-                    worksheet.write(row, col_num, valor, decimal_format2)
                 elif value in coluna3_dec:
                     worksheet.write(row, col_num, valor, decimal_format3)
                 elif value in colunaPHI:

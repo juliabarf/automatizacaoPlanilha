@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="75589cc1-a0da-4129-b714-131511b953a8" name="Changes" comment="corrige células vazias e adiciona script para converter .docx em .xlsx">
+    <list default="true" id="75589cc1-a0da-4129-b714-131511b953a8" name="Changes" comment="coriige valores fzi&#10;classifica ghe == 0">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
     </list>
@@ -135,7 +135,7 @@
       <workItem from="1750086267608" duration="2332000" />
       <workItem from="1750088629298" duration="641000" />
       <workItem from="1750089316565" duration="966000" />
-      <workItem from="1750093620275" duration="2200000" />
+      <workItem from="1750093620275" duration="3771000" />
     </task>
     <task id="LOCAL-00001" summary="cria projeto de automatização de planilhas">
       <option name="closed" value="true" />
@@ -313,7 +313,15 @@
       <option name="project" value="LOCAL" />
       <updated>1750089258217</updated>
     </task>
-    <option name="localTasksCounter" value="23" />
+    <task id="LOCAL-00023" summary="coriige valores fzi&#10;classifica ghe == 0">
+      <option name="closed" value="true" />
+      <created>1750095923956</created>
+      <option name="number" value="00023" />
+      <option name="presentableId" value="LOCAL-00023" />
+      <option name="project" value="LOCAL" />
+      <updated>1750095923956</updated>
+    </task>
+    <option name="localTasksCounter" value="24" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -337,11 +345,12 @@
     <MESSAGE value="converte .docx para .xlsx" />
     <MESSAGE value="versão final do aplicativo de planilhas" />
     <MESSAGE value="corrige células vazias e adiciona script para converter .docx em .xlsx" />
-    <option name="LAST_COMMIT_MESSAGE" value="corrige células vazias e adiciona script para converter .docx em .xlsx" />
+    <MESSAGE value="coriige valores fzi&#10;classifica ghe == 0" />
+    <option name="LAST_COMMIT_MESSAGE" value="coriige valores fzi&#10;classifica ghe == 0" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/automatizacaoPlanilha$teste3.coverage" NAME="teste3 Coverage Results" MODIFIED="1749128935072" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/automatizacaoPlanilha$main.coverage" NAME="main Coverage Results" MODIFIED="1750095827496" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/automatizacaoPlanilha$main.coverage" NAME="main Coverage Results" MODIFIED="1750164556746" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/automatizacaoPlanilha$celula.coverage" NAME="celula Coverage Results" MODIFIED="1749147100750" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/automatizacaoPlanilha$teste.coverage" NAME="teste Coverage Results" MODIFIED="1749127733436" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/automatizacaoPlanilha$tes.coverage" NAME="tes Coverage Results" MODIFIED="1749730745263" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
