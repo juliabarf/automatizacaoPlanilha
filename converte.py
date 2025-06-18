@@ -62,9 +62,11 @@ def selecionar_e_converter():
             docx_para_planilha(docx_path, xlsx_path)
 
 # Configuração da janela (descomente para usar)
+'''
 janela = tk.Tk()
 janela.title("Conversor de Tabela (.docx → .xlsx)")
 janela.geometry("400x200")
 botao = tk.Button(janela, text="Selecionar e Converter Tabela", command=selecionar_e_converter, font=("Arial", 12))
 botao.pack(pady=60)
 janela.mainloop()
+'''

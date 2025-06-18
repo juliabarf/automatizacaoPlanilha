@@ -1,8 +1,11 @@
 import tkinter as tk
 from tkinter import filedialog, messagebox
 import pandas as pd
+import converte
 import math
 import xlsxwriter
+
+from converte import selecionar_e_converter
 
 
 class AutomatizacaoPlanilha:
@@ -202,29 +205,29 @@ class AutomatizacaoPlanilha:
 class Aplicativo:
     def __init__(self, master = None):
         def selecionar_arquivo():
-            arquivo = filedialog.askopenfilename()
+            arquivo = filedialog.askopenfilename(
+                title="Selecione o arquivo .xlsx",
+                filetypes=[("Planilhas Excel", "*.xlsx")]
+            )
+            print(arquivo)
             if arquivo:
-                if arquivo.lower().endswith('.xlsx'):
-                    try:
-                        # Lê a planilha
-                        df = pd.read_excel(arquivo)
 
-                        # Colunas para verificar
-                        colunas_necessarias = ['Prof. (m)', 'Porosidade (%)', 'Perm Abs Longitud (mD)']
+                # Lê a planilha
+                df = pd.read_excel(arquivo)
+                # Colunas para verificar
+                colunas_necessarias = ['Prof. (m)', 'Porosidade (%)', 'Perm Abs Longitud (mD)']
 
-                        # Verifica se todas as colunas existem na planilha
-                        if all(col in df.columns for col in colunas_necessarias):
-                           AutomatizacaoPlanilha(arquivo).criaPlanilha()
-                           messagebox.showinfo('Sucesso', 'Sua planilha foi criada com sucesso!')
-                        else:
-                            cols_faltando = [col for col in colunas_necessarias if col not in df.columns]
-                            messagebox.showerror('Erro',
-                                                 f'A planilha está faltando as colunas: {", ".join(cols_faltando)}')
-                    except Exception as e:
-                        messagebox.showerror('Erro', f'Falha ao ler o arquivo:\n{str(e)}')
+                #Verifica se todas as colunas existem na planilha
+                if all(col in df.columns for col in colunas_necessarias):
+                    AutomatizacaoPlanilha(arquivo).criaPlanilha()
 
+                    messagebox.showinfo('Sucesso', 'Sua planilha foi criada com sucesso!')
                 else:
-                    messagebox.showerror('Erro', 'Por favor, selecione um arquivo com extensão .xlsx.')
+                    cols_faltando = [col for col in colunas_necessarias if col not in df.columns]
+                    messagebox.showerror('Erro',
+                                                 f'A planilha está faltando as colunas: {", ".join(cols_faltando)}')
+
+
         #container para o texto de atenção
         self.primeiroContainer = tk.Frame(master)
         self.primeiroContainer['pady'] = 10
@@ -237,8 +240,12 @@ class Aplicativo:
         self.segundoContainer.pack()
 
         self.terceiroContainer = tk.Frame(master)
-        self.terceiroContainer['pady'] = 10
+        self.terceiroContainer['pady'] = 5
         self.terceiroContainer.pack()
+
+        self.quartoContainer = tk.Frame(master)
+        self.quartoContainer['pady'] = 10
+        self.quartoContainer.pack()
 
         #texto de atenção
         self.titulo = tk.Label(self.primeiroContainer, text=' Antes de selecionar o arquivo, observe\n se a planilha contém as seguintes colunas:\n \nProf. (m) \nPorosidade (%) \nPerm Abs Longitud (md)')
@@ -247,6 +254,13 @@ class Aplicativo:
         #botão - arquivo
         self.btnArquivo = tk.Button(self.segundoContainer, text='Selecionar arquivo', width='25', command=selecionar_arquivo)
         self.btnArquivo.pack()
+
+        #texto para converter de .docx para .xlsx
+
+
+        #botão para selecionar arquivo .docx
+        self.btnDocx = tk.Button(self.quartoContainer, text = 'Converter tabela .docx em planilha .xls', width='40', command=selecionar_e_converter)
+        self.btnDocx.pack()
 
 
 
