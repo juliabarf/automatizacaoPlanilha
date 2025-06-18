@@ -4,8 +4,22 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="75589cc1-a0da-4129-b714-131511b953a8" name="Changes" comment="coriige valores fzi&#10;classifica ghe == 0">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    <list default="true" id="75589cc1-a0da-4129-b714-131511b953a8" name="Changes" comment="versão final do aplicativo">
+      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/profiles_settings.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Gera Planilhas.spec" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/Gera Planilhas/Analysis-00.toc" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/Gera Planilhas/EXE-00.toc" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/Gera Planilhas/Gera Planilhas.pkg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/Gera Planilhas/PKG-00.toc" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/Gera Planilhas/PYZ-00.pyz" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/Gera Planilhas/PYZ-00.toc" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/Gera Planilhas/base_library.zip" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/Gera Planilhas/warn-Gera Planilhas.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/Gera Planilhas/xref-Gera Planilhas.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/Gera Planilhas.exe" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -135,7 +149,8 @@
       <workItem from="1750086267608" duration="2332000" />
       <workItem from="1750088629298" duration="641000" />
       <workItem from="1750089316565" duration="966000" />
-      <workItem from="1750093620275" duration="3771000" />
+      <workItem from="1750093620275" duration="4065000" />
+      <workItem from="1750245631560" duration="343000" />
     </task>
     <task id="LOCAL-00001" summary="cria projeto de automatização de planilhas">
       <option name="closed" value="true" />
@@ -321,7 +336,15 @@
       <option name="project" value="LOCAL" />
       <updated>1750095923956</updated>
     </task>
-    <option name="localTasksCounter" value="24" />
+    <task id="LOCAL-00024" summary="versão final do aplicativo">
+      <option name="closed" value="true" />
+      <created>1750164745014</created>
+      <option name="number" value="00024" />
+      <option name="presentableId" value="LOCAL-00024" />
+      <option name="project" value="LOCAL" />
+      <updated>1750164745014</updated>
+    </task>
+    <option name="localTasksCounter" value="25" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -346,11 +369,12 @@
     <MESSAGE value="versão final do aplicativo de planilhas" />
     <MESSAGE value="corrige células vazias e adiciona script para converter .docx em .xlsx" />
     <MESSAGE value="coriige valores fzi&#10;classifica ghe == 0" />
-    <option name="LAST_COMMIT_MESSAGE" value="coriige valores fzi&#10;classifica ghe == 0" />
+    <MESSAGE value="versão final do aplicativo" />
+    <option name="LAST_COMMIT_MESSAGE" value="versão final do aplicativo" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/automatizacaoPlanilha$teste3.coverage" NAME="teste3 Coverage Results" MODIFIED="1749128935072" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/automatizacaoPlanilha$main.coverage" NAME="main Coverage Results" MODIFIED="1750164556746" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/automatizacaoPlanilha$main.coverage" NAME="main Coverage Results" MODIFIED="1750164638956" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/automatizacaoPlanilha$celula.coverage" NAME="celula Coverage Results" MODIFIED="1749147100750" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/automatizacaoPlanilha$teste.coverage" NAME="teste Coverage Results" MODIFIED="1749127733436" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/automatizacaoPlanilha$tes.coverage" NAME="tes Coverage Results" MODIFIED="1749730745263" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />

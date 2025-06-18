@@ -4,6 +4,7 @@ import pandas as pd
 import math
 import xlsxwriter
 
+
 class AutomatizacaoPlanilha:
     def __init__(self, arquivo):
         # lê a planilha com o caminho da tabela fornecido pela pessoa e coloca o conteúdo das colunas em variáveis
