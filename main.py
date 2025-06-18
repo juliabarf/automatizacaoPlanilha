@@ -214,18 +214,17 @@ class Aplicativo:
 
                         # Verifica se todas as colunas existem na planilha
                         if all(col in df.columns for col in colunas_necessarias):
-                            messagebox.showinfo('Processo concluído.', 'Sua planilha foi criada com sucesso!')
-                            print("Arquivo criado com sucesso!")
-                            AutomatizacaoPlanilha(arquivo).criaPlanilha()
+                           AutomatizacaoPlanilha(arquivo).criaPlanilha()
+                           messagebox.showinfo('Sucesso', 'Sua planilha foi criada com sucesso!')
                         else:
                             cols_faltando = [col for col in colunas_necessarias if col not in df.columns]
                             messagebox.showerror('Erro',
                                                  f'A planilha está faltando as colunas: {", ".join(cols_faltando)}')
                     except Exception as e:
                         messagebox.showerror('Erro', f'Falha ao ler o arquivo:\n{str(e)}')
+
                 else:
                     messagebox.showerror('Erro', 'Por favor, selecione um arquivo com extensão .xlsx.')
-
         #container para o texto de atenção
         self.primeiroContainer = tk.Frame(master)
         self.primeiroContainer['pady'] = 10
