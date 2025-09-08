@@ -25,6 +25,7 @@ class AutomatizacaoPlanilha:
         return list(self._porosidade)
 
     def porosidadeDec(self):
+
         return [round(p / 100, 3) for p in self._porosidade]
 
     def rqi(self):
@@ -46,20 +47,21 @@ class AutomatizacaoPlanilha:
         resultado = []
         for i in range(len(self._df)):
             try:
-                porosidade = float(self._porosidade[i])
-                if pd.isna(porosidade) or porosidade in (0, 100):
+                porosidade = float(self.porosidadeDec()[i])  # já está entre 0 e 1
+                if pd.isna(porosidade) or porosidade <= 0 or porosidade >= 1:
                     resultado.append(0)
                 else:
-                    phi = porosidade / (100 - porosidade) * 100
-                    resultado.append(round(phi))
-            except:
+                    phi = porosidade / (1 - porosidade)
+                    resultado.append(round(phi, 3))  # 4 casas decimais
+            except Exception as e:
+                print(f"Erro no índice {i}: {e}")
                 resultado.append(0)
         return resultado
 
     def fzi(self):
         phi = self.phi()
         rqi = self.rqi()
-        return [round((r / p) * 100, 4) if p != 0 else 0 for r, p in zip(rqi, phi)]
+        return [(r / p) if p != 0 else 0 for r, p in zip(rqi, phi)]
 
     def ghe(self):
         fzi = self.fzi()
@@ -99,7 +101,7 @@ class AutomatizacaoPlanilha:
             'Porosity Decimal': self.porosidadeDec(),
             'Permeability (mD)': self._permeabilidade,
             'RQI': self.rqi(),
-            'PHI(Z)': [f"{round(p, 2)}%" for p in self.phi()],
+            'PHI(Z)': self.phi(),
             'FZI': self.fzi(),
             'GHE': self.ghe()
         }
@@ -113,12 +115,11 @@ class AutomatizacaoPlanilha:
 
         cell_format = workbook.add_format({'align': 'center', 'valign': 'vcenter'})
         decimal_format = workbook.add_format({'num_format': '0.000', 'align': 'center', 'valign': 'vcenter'})
-        decimal_format3 = workbook.add_format({'num_format': '0.0000', 'align': 'center', 'valign': 'vcenter'})
-        decimal_format4 = workbook.add_format({'num_format': '0', 'align': 'center', 'valign': 'vcenter'})
+        decimal_format3 = workbook.add_format({'align': 'center', 'valign': 'vcenter'})
+        float_format = workbook.add_format({'num_format': '0.############', 'align': 'center', 'valign': 'vcenter'})
 
-        colunas_com_decimal = ['Porosity Decimal', 'Profundidade', 'Permeability (mD)', 'Porosity (%)']
+        colunas_com_decimal = ['Porosity Decimal', 'Profundidade', 'Permeability (mD)', 'Porosity (%)', 'PHI(Z)']
         coluna3_dec = ['RQI', 'FZI']
-        colunaPHI = ['PHI(Z)']
 
         for col_num, value in enumerate(dfColunas.columns.values):
             worksheet.write(0, col_num, value, cell_format)
@@ -128,8 +129,7 @@ class AutomatizacaoPlanilha:
                     worksheet.write(row, col_num, valor, decimal_format)
                 elif value in coluna3_dec:
                     worksheet.write(row, col_num, valor, decimal_format3)
-                elif value in colunaPHI:
-                    worksheet.write(row, col_num, valor, decimal_format4)
+
                 else:
                     worksheet.write(row, col_num, valor, cell_format)
 
@@ -192,20 +192,18 @@ class Aplicativo:
         self.quartoContainer.pack()
 
         self.titulo = tk.Label(
-            self.primeiroContainer,
-            text='Antes de selecionar o arquivo, observe\nse a planilha contém as seguintes colunas:\n\nProf. (m)\nPorosidade (%)\nPerm Abs Longitud (m)'
-        )
+        self.primeiroContainer,text='Antes de selecionar o arquivo, observe\nse a planilha contém as seguintes colunas:\n\nProf. (m)\nPorosidade (%)\nPerm Abs Longitud (m)')
         self.titulo.pack()
 
         self.btnArquivo = tk.Button(self.segundoContainer, text='Selecionar arquivo', width=25, command=selecionar_arquivo)
         self.btnArquivo.pack()
 
-        self.btnDocx = tk.Button(self.quartoContainer, text='Converter tabela .docx em planilha .xls', width=40, command=selecionar_e_converter)
-        self.btnDocx.pack()
+        #self.btnDocx = tk.Button(self.quartoContainer, text='Converter tabela .docx em planilha .xls', width=40, command=selecionar_e_converter)
+        #self.btnDocx.pack()
 
 
 # Executa o programa
 root = tk.Tk()
-root.title('Planilhas Lagesed')
+root.title('Planilhas Petrofisica Lagesed')
 app = Aplicativo(root)
 root.mainloop()

@@ -61,7 +61,8 @@ def selecionar_e_converter():
         if xlsx_path:
             docx_para_planilha(docx_path, xlsx_path)
 
-# Configuração da janela (descomente para usar)
+# nesse caso eu tô usando esse script para ser importado para o main.py
+# Configuração da janela (descomente para usar neste script)
 '''
 janela = tk.Tk()
 janela.title("Conversor de Tabela (.docx → .xlsx)")
