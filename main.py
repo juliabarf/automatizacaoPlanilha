@@ -2,6 +2,7 @@ import tkinter as tk
 from tkinter import filedialog, messagebox
 import pandas as pd
 import math
+from decimal import Decimal
 import xlsxwriter
 from converte import selecionar_e_converter
 
@@ -16,7 +17,6 @@ class AutomatizacaoPlanilha:
 
         convert_dic = {'Prof. (m)': float}
         self._df = self._df.astype(convert_dic)
-
         self._profundidade = self._df['Prof. (m)']
         self._porosidade = self._df['Porosidade (%)']
         self._permeabilidade = self._df['Perm Abs Longitud (mD)']
@@ -28,40 +28,47 @@ class AutomatizacaoPlanilha:
 
         return [round(p / 100, 3) for p in self._porosidade]
 
+    from decimal import Decimal, getcontext
+    getcontext().prec = 28  # define alta precisão
+
+    def porosidadeDec(self):
+        # Não usar round aqui!
+        return [Decimal(str(p)) / Decimal("100") for p in self._porosidade]
+
     def rqi(self):
         resultado = []
         for i in range(len(self._df)):
             try:
-                permeabilidade = float(self._permeabilidade[i])
-                porosidade_dec = float(self.porosidadeDec()[i])
-                if pd.isna(permeabilidade) or pd.isna(porosidade_dec) or permeabilidade == 0 or porosidade_dec == 0:
-                    resultado.append(0)
+                permeabilidade = Decimal(str(self._permeabilidade[i]))
+                porosidade_dec = self.porosidadeDec()[i]
+                if permeabilidade == 0 or porosidade_dec == 0:
+                    resultado.append(Decimal("0"))
                 else:
-                    rqi = 0.0314 * math.sqrt(permeabilidade / porosidade_dec)
+                    rqi = Decimal("0.0314") * (permeabilidade / porosidade_dec).sqrt()
                     resultado.append(rqi)
-            except:
-                resultado.append(0)
+            except Exception:
+                resultado.append(Decimal("0"))
         return resultado
 
     def phi(self):
         resultado = []
         for i in range(len(self._df)):
             try:
-                porosidade = float(self.porosidadeDec()[i])  # já está entre 0 e 1
-                if pd.isna(porosidade) or porosidade <= 0 or porosidade >= 1:
-                    resultado.append(0)
+                porosidade = self.porosidadeDec()[i]
+                if porosidade <= 0 or porosidade >= 1:
+                    resultado.append(Decimal("0"))
                 else:
-                    phi = porosidade / (1 - porosidade)
-                    resultado.append(round(phi, 3))  # 4 casas decimais
+                    phi = porosidade / (Decimal("1") - porosidade)
+                    resultado.append(phi)
             except Exception as e:
                 print(f"Erro no índice {i}: {e}")
-                resultado.append(0)
+                resultado.append(Decimal("0"))
         return resultado
 
     def fzi(self):
         phi = self.phi()
         rqi = self.rqi()
-        return [(r / p) if p != 0 else 0 for r, p in zip(rqi, phi)]
+        return [(r / p if p != 0 else Decimal("0")) for r, p in zip(rqi, phi)]
 
     def ghe(self):
         fzi = self.fzi()
@@ -72,21 +79,21 @@ class AutomatizacaoPlanilha:
                     resultado.append(0)
                 elif valor < 0.1875:
                     resultado.append(1)
-                elif valor < 0.375:
+                elif valor < 0.3750:
                     resultado.append(2)
-                elif valor < 0.75:
+                elif valor < 0.7500:
                     resultado.append(3)
-                elif valor < 1.5:
+                elif valor < 1.5000:
                     resultado.append(4)
-                elif valor < 3.0:
+                elif valor < 3.0000:
                     resultado.append(5)
-                elif valor < 6.0:
+                elif valor < 6.0000:
                     resultado.append(6)
-                elif valor < 12.0:
+                elif valor < 12.0000:
                     resultado.append(7)
-                elif valor < 24.0:
+                elif valor < 24.0000:
                     resultado.append(8)
-                elif valor < 48.0:
+                elif valor < 48.0000:
                     resultado.append(9)
                 else:
                     resultado.append(10)
