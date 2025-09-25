@@ -5,7 +5,7 @@ import math
 from decimal import Decimal
 import xlsxwriter
 from converte import selecionar_e_converter
-
+from teste import principal
 
 class AutomatizacaoPlanilha:
     def __init__(self, df, nomeTabela):
@@ -64,7 +64,6 @@ class AutomatizacaoPlanilha:
                 print(f"Erro no índice {i}: {e}")
                 resultado.append(Decimal("0"))
         return resultado
-
     def fzi(self):
         phi = self.phi()
         rqi = self.rqi()
@@ -113,8 +112,8 @@ class AutomatizacaoPlanilha:
             'GHE': self.ghe()
         }
         dfColunas = pd.DataFrame(colunas).fillna(0)
-
-        writer = pd.ExcelWriter(self.nomeTabela + 'Alterada.xlsx', engine='xlsxwriter')
+        file_path = self.nomeTabela + 'Alterada.xlsx'
+        writer = pd.ExcelWriter(file_path, engine='xlsxwriter')
         dfColunas.to_excel(writer, sheet_name='Planilha1', index=False)
 
         workbook = writer.book
@@ -147,11 +146,24 @@ class AutomatizacaoPlanilha:
                 worksheet.write(0, col_num, value, workbook.add_format({'align': 'center', 'valign': 'vcenter', 'bg_color': '#FFCCCC'}))
             else:
                 worksheet.write(0, col_num, value, cell_format)
-
         worksheet.set_column('A:G', 20)
-        writer.close()
 
 
+        phi_points = []
+        for k in range(len(colunas['PHI(Z)'])):
+            # converte cada valor Decimal para float
+            phi_points.append(float(colunas['PHI(Z)'][k]))
+
+        print(phi_points)
+
+        fzi_points = []
+        for f in range(len(colunas['FZI'])):
+            # converte cada valor Decimal para float
+            fzi_points.append(float(colunas['FZI'][f]))
+
+        print(phi_points)
+
+        principal(phi_points, fzi_points, file_path)
 class Aplicativo:
     def __init__(self, master=None):
         def selecionar_arquivo():
