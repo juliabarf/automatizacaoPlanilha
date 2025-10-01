@@ -5,7 +5,7 @@ import math
 from decimal import Decimal
 import xlsxwriter
 from converte import selecionar_e_converter
-from teste import principal
+from grafico import principal
 
 class AutomatizacaoPlanilha:
     def __init__(self, df, nomeTabela):
