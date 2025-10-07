@@ -149,21 +149,21 @@ class AutomatizacaoPlanilha:
         worksheet.set_column('A:G', 20)
 
 
-        phi_points = []
-        for k in range(len(colunas['PHI(Z)'])):
+        porosidade_dec = []
+        for k in range(len(colunas['Porosity Decimal'])):
             # converte cada valor Decimal para float
-            phi_points.append(float(colunas['PHI(Z)'][k]))
+            porosidade_dec.append(float(colunas['Porosity Decimal'][k]))
 
-        print(phi_points)
+        print(porosidade_dec)
 
-        fzi_points = []
-        for f in range(len(colunas['FZI'])):
+        permeability = []
+        for f in range(len(colunas['Permeability (mD)'])):
             # converte cada valor Decimal para float
-            fzi_points.append(float(colunas['FZI'][f]))
+            permeability.append(float(colunas['Permeability (mD)'][f]))
 
-        print(phi_points)
+        print(permeability)
 
-        principal(phi_points, fzi_points, file_path)
+        principal(porosidade_dec, permeability, file_path)
 class Aplicativo:
     def __init__(self, master=None):
         def selecionar_arquivo():
