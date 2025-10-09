@@ -11,7 +11,7 @@ def permeabilit(phi, fzi):
     return k
 
 # -----------------------------
-def principal(porosidade_dec, permeability, file_path):
+def principal(porosidade_dec, permeability, ghe,  file_path):
     # Tabela FZI ↔ GHE
     fzi_values = [48, 24, 12, 6, 3, 1.5, 0.75, 0.375, 0.1875, 0.0938]
     ghe_labels = list(range(10, 0, -1))
@@ -40,31 +40,49 @@ def principal(porosidade_dec, permeability, file_path):
 
     # DataFrame para armazenar legendas clicadas
     df_clicks = pd.DataFrame(columns=["Porosity (decimal)", "Permeability (mD)", "K"])
-
+    annotations = []
     # -----------------------------
     # Função para adicionar legenda ao clicar
     def on_click(event):
-        nonlocal df_clicks
-        if event.inaxes == ax:
-            distances = np.sqrt((np.array(porosidade_dec) - event.xdata)**2 +
-                                (np.log10(np.array(k_points)) - np.log10(event.ydata))**2)
-            min_index = np.argmin(distances)
-            if distances[min_index] < 0.02:
-                # Adicionar anotação no gráfico
-                ax.annotate(f"Porosidade (decimal)={porosidade_dec[min_index]:.2f}\nPermeability (mD)={permeability[min_index]}",
-                            (porosidade_dec[min_index], k_points[min_index]),
-                            textcoords="offset points", xytext=(10,10),
-                            arrowprops=dict(arrowstyle="->", color='red'),
-                            fontsize=9, color='blue')
-                fig.canvas.draw()
+        nonlocal df_clicks, annotations
 
-                # Adicionar ao DataFrame
-                new_row = {
-                    "Porosity (decimal)": porosidade_dec[min_index],
-                    "Permeability (mD)": permeability[min_index],
-                    "K": k_points[min_index]
-                }
-                df_clicks = pd.concat([df_clicks, pd.DataFrame([new_row])], ignore_index=True)
+        if event.inaxes == ax:
+            distances = np.sqrt((np.array(porosidade_dec) - event.xdata) ** 2 +
+                                (np.log10(np.array(k_points)) - np.log10(event.ydata)) ** 2)
+            min_index = np.argmin(distances)
+
+            if distances[min_index] < 0.02:
+                # Verifica se já existe anotação nesse ponto
+                existing = [ann for ann, idx in annotations if idx == min_index]
+
+                if existing:
+                    # Remover anotação e entrada do DataFrame
+                    existing[0].remove()
+                    annotations = [(ann, idx) for ann, idx in annotations if idx != min_index]
+                    df_clicks = df_clicks[df_clicks["Porosity (decimal)"] != porosidade_dec[min_index]]
+                    print(f"❌ Anotação removida: Porosidade={porosidade_dec[min_index]:.2f}")
+                else:
+                    # Adicionar anotação no gráfico
+                    ann = ax.annotate(
+                        f"SÉRIE 'GHE' \nPonto Porosity '{porosidade_dec[min_index]:.2f}'\n( {porosidade_dec[min_index]:.2f},{permeability[min_index]})",
+                        (porosidade_dec[min_index], k_points[min_index]),
+                        textcoords="offset points", xytext=(10, 10),
+                        arrowprops=dict(arrowstyle="->", color='red'),
+                        fontsize=9, color='blue'
+                    )
+                    annotations.append((ann, min_index))
+                    print(f"✅ Anotação adicionada: Porosidade={porosidade_dec[min_index]:.2f} Permeability={permeability[min_index]:.2f}")
+
+                    # Adicionar ao DataFrame
+                    new_row = {
+                        "Porosity (decimal)": porosidade_dec[min_index],
+                        "Permeability (mD)": permeability[min_index],
+                        "K": k_points[min_index]
+                    }
+                    df_clicks = pd.concat([df_clicks, pd.DataFrame([new_row])], ignore_index=True)
+
+                # Atualizar o gráfico
+                fig.canvas.draw()
 
                 # Salvar/atualizar Excel
                 with pd.ExcelWriter(file_path, engine='xlsxwriter') as writer:
@@ -79,18 +97,15 @@ def principal(porosidade_dec, permeability, file_path):
                     # Aba de pontos clicados
                     df_clicks.to_excel(writer, sheet_name='Pontos_Clicados', index=False)
 
-                    # Gráfico como imagem
+                    # Inserir gráfico
                     img_file = "ghe_plot.png"
                     plt.savefig(img_file, dpi=300)
                     workbook = writer.book
                     worksheet2 = workbook.add_worksheet("Gráfico")
                     worksheet2.insert_image("B2", img_file, {"x_scale": 0.8, "y_scale": 0.8})
 
-                print(f"✅ Ponto clicado registrado: Porosidade (decimal) = {porosidade_dec[min_index]:.2f}, Permeability (mD) = {permeability[min_index]}")
-
     fig.canvas.mpl_connect("button_press_event", on_click)
-
-    plt.show()  # Mostrar interativo
+    plt.show()
 
 # -----------------------------
 # Exemplo de uso

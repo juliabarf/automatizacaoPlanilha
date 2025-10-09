@@ -1,11 +1,13 @@
+
 import tkinter as tk
 from tkinter import filedialog, messagebox
 import pandas as pd
 import math
 from decimal import Decimal
+from decimal import Decimal, getcontext
 import xlsxwriter
 from converte import selecionar_e_converter
-from grafico import principal
+from graficoCurvas import principal
 
 class AutomatizacaoPlanilha:
     def __init__(self, df, nomeTabela):
@@ -25,12 +27,9 @@ class AutomatizacaoPlanilha:
         return list(self._porosidade)
 
     def porosidadeDec(self):
-
         return [round(p / 100, 3) for p in self._porosidade]
 
-    from decimal import Decimal, getcontext
     getcontext().prec = 28  # define alta precisão
-
     def porosidadeDec(self):
         # Não usar round aqui!
         return [Decimal(str(p)) / Decimal("100") for p in self._porosidade]
@@ -64,6 +63,7 @@ class AutomatizacaoPlanilha:
                 print(f"Erro no índice {i}: {e}")
                 resultado.append(Decimal("0"))
         return resultado
+
     def fzi(self):
         phi = self.phi()
         rqi = self.rqi()
@@ -100,6 +100,7 @@ class AutomatizacaoPlanilha:
                 resultado.append(0)
         return resultado
 
+
     def criaPlanilha(self):
         colunas = {
             'Profundidade': self._profundidade,
@@ -112,6 +113,7 @@ class AutomatizacaoPlanilha:
             'GHE': self.ghe()
         }
         dfColunas = pd.DataFrame(colunas).fillna(0)
+
         file_path = self.nomeTabela + 'Alterada.xlsx'
         writer = pd.ExcelWriter(file_path, engine='xlsxwriter')
         dfColunas.to_excel(writer, sheet_name='Planilha1', index=False)
@@ -146,8 +148,9 @@ class AutomatizacaoPlanilha:
                 worksheet.write(0, col_num, value, workbook.add_format({'align': 'center', 'valign': 'vcenter', 'bg_color': '#FFCCCC'}))
             else:
                 worksheet.write(0, col_num, value, cell_format)
-        worksheet.set_column('A:G', 20)
 
+        worksheet.set_column('A:G', 20)
+        writer.close()
 
         porosidade_dec = []
         for k in range(len(colunas['Porosity Decimal'])):
@@ -163,7 +166,13 @@ class AutomatizacaoPlanilha:
 
         print(permeability)
 
-        principal(porosidade_dec, permeability, file_path)
+        ghe = []
+        for f in range(len(colunas['GHE'])):
+            ghe.append(float(colunas['GHE'][f]))
+
+        print(ghe)
+        principal(porosidade_dec, permeability, ghe, file_path)
+
 class Aplicativo:
     def __init__(self, master=None):
         def selecionar_arquivo():
