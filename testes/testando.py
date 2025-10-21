@@ -1,36 +1,39 @@
-file_path = self.nomeTabela + 'Alterada.xlsx'
+import openpyxl
+from openpyxl.chart import BarChart, Reference
 
-with pd.ExcelWriter(file_path, engine='xlsxwriter') as writer:
-    dfColunas.to_excel(writer, sheet_name='Planilha1', index=False)
+# Carregar a planilha existente
+wb = openpyxl.load_workbook("testeEXCEL.xlsx")
+ws = wb.active  # Ou use wb['Nome_da_Aba'] para selecionar uma aba específica
 
-    workbook = writer.book
-    worksheet = writer.sheets['Planilha1']
+# Adicionar dados à planilha (opcional)
+# Se você já tiver dados, pode pular esta parte
+data = [
+    ['Mês', 'Vendas'],
+    ['Janeiro', 30],
+    ['Fevereiro', 45],
+    ['Março', 25],
+    ['Abril', 50],
+]
 
-    cell_format = workbook.add_format({'align': 'center', 'valign': 'vcenter'})
-    decimal_format = workbook.add_format({'num_format': '0.000', 'align': 'center', 'valign': 'vcenter'})
-    decimal_format3 = workbook.add_format({'align': 'center', 'valign': 'vcenter'})
-    float_format = workbook.add_format({'num_format': '0.############', 'align': 'center', 'valign': 'vcenter'})
+# Adicionando dados a partir da linha 1, coluna 1
+for row in data:
+    ws.append(row)
 
-    colunas_com_decimal = ['Porosity Decimal', 'Profundidade', 'Permeability (mD)', 'Porosity (%)', 'PHI(Z)']
-    coluna3_dec = ['RQI', 'FZI']
+# Criar um gráfico de barras
+chart = BarChart()
+chart.title = "Vendas Mensais"
+chart.x_axis.title = "Mês"
+chart.y_axis.title = "Vendas"
 
-    for col_num, value in enumerate(dfColunas.columns.values):
-        worksheet.write(0, col_num, value, cell_format)
-        for row in range(1, len(dfColunas) + 1):
-            valor = dfColunas.iloc[row - 1, col_num]
-            if value in colunas_com_decimal:
-                worksheet.write(row, col_num, valor, decimal_format)
-            elif value in coluna3_dec:
-                worksheet.write(row, col_num, valor, decimal_format3)
-            else:
-                worksheet.write(row, col_num, valor, cell_format)
+# Definir os dados do gráfico
+data_reference = Reference(ws, min_col=2, min_row=1, max_col=2, max_row=5)
+categories_reference = Reference(ws, min_col=1, min_row=2, max_row=5)
 
-    for col_num, value in enumerate(dfColunas.columns.values):
-        if value in ['FZI', 'RQI', 'PHI(Z)', 'GHE']:
-            worksheet.write(0, col_num, value, workbook.add_format({'align': 'center', 'valign': 'vcenter', 'bg_color': '#FFFF99'}))
-        elif value in ['Profundidade', 'Porosity (%)', 'Porosity Decimal', 'Permeability (mD)']:
-            worksheet.write(0, col_num, value, workbook.add_format({'align': 'center', 'valign': 'vcenter', 'bg_color': '#FFCCCC'}))
-        else:
-            worksheet.write(0, col_num, value, cell_format)
+chart.add_data(data_reference, titles_from_data=True)
+chart.set_categories(categories_reference)
 
-    worksheet.set_column('A:G', 20)
+# Adicionar o gráfico à planilha
+ws.add_chart(chart, "D7")  # Posição onde o gráfico será inserido
+
+# Salvar a planilha
+wb.save("dados_existentes.xlsx")

@@ -2,12 +2,13 @@
 import tkinter as tk
 from tkinter import filedialog, messagebox
 import pandas as pd
+import numpy as np
 import math
 from decimal import Decimal
 from decimal import Decimal, getcontext
 import xlsxwriter
 from converte import selecionar_e_converter
-from graficoCurvas import principal
+from grafico import principal
 
 class AutomatizacaoPlanilha:
     def __init__(self, df, nomeTabela):
@@ -113,7 +114,6 @@ class AutomatizacaoPlanilha:
             'GHE': self.ghe()
         }
         dfColunas = pd.DataFrame(colunas).fillna(0)
-
         file_path = self.nomeTabela + 'Alterada.xlsx'
         writer = pd.ExcelWriter(file_path, engine='xlsxwriter')
         dfColunas.to_excel(writer, sheet_name='Planilha1', index=False)
@@ -149,9 +149,12 @@ class AutomatizacaoPlanilha:
             else:
                 worksheet.write(0, col_num, value, cell_format)
 
+
         worksheet.set_column('A:G', 20)
         writer.close()
+        self.grafico(colunas, file_path)
 
+    def grafico(self, colunas, file_path):
         porosidade_dec = []
         for k in range(len(colunas['Porosity Decimal'])):
             # converte cada valor Decimal para float
@@ -161,7 +164,6 @@ class AutomatizacaoPlanilha:
 
         permeability = []
         for f in range(len(colunas['Permeability (mD)'])):
-            # converte cada valor Decimal para float
             permeability.append(float(colunas['Permeability (mD)'][f]))
 
         print(permeability)
@@ -171,7 +173,9 @@ class AutomatizacaoPlanilha:
             ghe.append(float(colunas['GHE'][f]))
 
         print(ghe)
-        principal(porosidade_dec, permeability, ghe, file_path)
+        principal(file_path)
+
+
 
 class Aplicativo:
     def __init__(self, master=None):

@@ -28,8 +28,8 @@ def principal(porosidade_dec, permeability, ghe, file_path):
 
         # ---- Planilha 1: Dados
         df = pd.DataFrame({"Porosity (decimal)": porosidade_dec, "Permeability (mD)": permeability})
-        df.to_excel(writer, sheet_name="Planilha1", index=False)
-        worksheet = writer.sheets["Planilha1"]
+        df.to_excel(writer, sheet_name="Planilha2", index=False)
+        worksheet = writer.sheets["Planilha2"]
 
         # ---- Planilha 2: Faixas
         faixa_df = pd.DataFrame({"Porosity": phi})
