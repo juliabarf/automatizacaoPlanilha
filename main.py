@@ -1,13 +1,21 @@
-
 import tkinter as tk
 from tkinter import filedialog, messagebox
 import pandas as pd
 import math
-from decimal import Decimal
 from decimal import Decimal, getcontext
-import xlsxwriter
-from converte import selecionar_e_converter
-from graficoCurvas import principal
+from openpyxl import Workbook, load_workbook
+from openpyxl.chart import ScatterChart, Reference, Series
+from openpyxl.utils import get_column_letter
+from openpyxl.styles import Alignment, PatternFill
+import numpy as np
+import os
+
+# -----------------------------
+def permeabilit(phi, fzi):
+    phi = np.clip(phi, 1e-6, 0.99)
+    phi_e = phi / (1 - phi)
+    k = phi * ((fzi * phi_e) / 0.0314) ** 2
+    return k
 
 class AutomatizacaoPlanilha:
     def __init__(self, df, nomeTabela):
@@ -100,7 +108,6 @@ class AutomatizacaoPlanilha:
                 resultado.append(0)
         return resultado
 
-
     def criaPlanilha(self):
         colunas = {
             'Profundidade': self._profundidade,
@@ -115,63 +122,125 @@ class AutomatizacaoPlanilha:
         dfColunas = pd.DataFrame(colunas).fillna(0)
 
         file_path = self.nomeTabela + 'Alterada.xlsx'
-        writer = pd.ExcelWriter(file_path, engine='xlsxwriter')
-        dfColunas.to_excel(writer, sheet_name='Planilha1', index=False)
 
-        workbook = writer.book
-        worksheet = writer.sheets['Planilha1']
+        # Cria ou abre o workbook
+        if os.path.exists(file_path):
+            workbook = load_workbook(file_path)
+        else:
+            workbook = Workbook()
+            if "Sheet" in workbook.sheetnames:
+                workbook.remove(workbook["Sheet"])
 
-        cell_format = workbook.add_format({'align': 'center', 'valign': 'vcenter'})
-        decimal_format = workbook.add_format({'num_format': '0.000', 'align': 'center', 'valign': 'vcenter'})
-        decimal_format3 = workbook.add_format({'align': 'center', 'valign': 'vcenter'})
-        float_format = workbook.add_format({'num_format': '0.############', 'align': 'center', 'valign': 'vcenter'})
+        # ---- Planilha 1: Dados
+        if "Planilha1" in workbook.sheetnames:
+            sheet1 = workbook["Planilha1"]
+            # Limpa a planilha existente
+            for row in sheet1.iter_rows():
+                for cell in row:
+                    cell.value = None
+        else:
+            sheet1 = workbook.create_sheet("Planilha1")
 
-        colunas_com_decimal = ['Porosity Decimal', 'Profundidade', 'Permeability (mD)', 'Porosity (%)', 'PHI(Z)']
-        coluna3_dec = ['RQI', 'FZI']
+        # Escreve cabeçalhos e dados
+        headers = list(dfColunas.columns)
+        for col_num, header in enumerate(headers):
+            cell = sheet1.cell(row=1, column=col_num+1, value=header)
+            cell.alignment = Alignment(horizontal='center', vertical='center')
+            if header in ['FZI', 'RQI', 'PHI(Z)', 'GHE']:
+                cell.fill = PatternFill(start_color="FFFF99", end_color="FFFF99", fill_type="solid")
+            elif header in ['Profundidade', 'Porosity (%)', 'Porosity Decimal', 'Permeability (mD)']:
+                cell.fill = PatternFill(start_color="FFCCCC", end_color="FFCCCC", fill_type="solid")
 
-        for col_num, value in enumerate(dfColunas.columns.values):
-            worksheet.write(0, col_num, value, cell_format)
-            for row in range(1, len(dfColunas) + 1):
-                valor = dfColunas.iloc[row - 1, col_num]
-                if value in colunas_com_decimal:
-                    worksheet.write(row, col_num, valor, decimal_format)
-                elif value in coluna3_dec:
-                    worksheet.write(row, col_num, valor, decimal_format3)
+        for row_num, row in enumerate(dfColunas.itertuples(index=False), start=2):
+            for col_num, value in enumerate(row):
+                cell = sheet1.cell(row=row_num, column=col_num+1, value=float(value) if isinstance(value, Decimal) else value)
+                cell.alignment = Alignment(horizontal='center', vertical='center')
+                if headers[col_num] in ['Porosity Decimal', 'Profundidade', 'Permeability (mD)', 'Porosity (%)', 'PHI(Z)']:
+                    cell.number_format = '0.000'
+                elif headers[col_num] in ['RQI', 'FZI']:
+                    cell.number_format = '0.############'
 
-                else:
-                    worksheet.write(row, col_num, valor, cell_format)
+        # Ajusta largura das colunas
+        for col in range(1, len(headers)+1):
+            sheet1.column_dimensions[get_column_letter(col)].width = 20
 
-        for col_num, value in enumerate(dfColunas.columns.values):
-            if value in ['FZI', 'RQI', 'PHI(Z)', 'GHE']:
-                worksheet.write(0, col_num, value, workbook.add_format({'align': 'center', 'valign': 'vcenter', 'bg_color': '#FFFF99'}))
-            elif value in ['Profundidade', 'Porosity (%)', 'Porosity Decimal', 'Permeability (mD)']:
-                worksheet.write(0, col_num, value, workbook.add_format({'align': 'center', 'valign': 'vcenter', 'bg_color': '#FFCCCC'}))
-            else:
-                worksheet.write(0, col_num, value, cell_format)
+        # ---- Prepara dados para gráfico
+        porosidade_dec = [float(p) for p in dfColunas['Porosity Decimal']]
+        permeability = [float(p) for p in dfColunas['Permeability (mD)']]
+        ghe = [float(g) for g in dfColunas['GHE']]
 
-        worksheet.set_column('A:G', 20)
-        writer.close()
+        # ---- Planilha 2: Faixas
+        fzi_values = [48, 24, 12, 6, 3, 1.5, 0.75, 0.375, 0.1875, 0.0938]
+        ghe_labels = list(range(10, 0, -1))
+        phi = np.linspace(0.01, 0.5, 300)
 
-        porosidade_dec = []
-        for k in range(len(colunas['Porosity Decimal'])):
-            # converte cada valor Decimal para float
-            porosidade_dec.append(float(colunas['Porosity Decimal'][k]))
+        # Calcula faixas
+        data = []
+        for i in range(len(fzi_values)):
+            k = permeabilit(phi, fzi_values[i])
+            data.append(k)
 
-        print(porosidade_dec)
+        if "Faixas" in workbook.sheetnames:
+            sheet_faixas = workbook["Faixas"]
+            # Limpa a planilha existente
+            for row in sheet_faixas.iter_rows():
+                for cell in row:
+                    cell.value = None
+        else:
+            sheet_faixas = workbook.create_sheet("Faixas")
 
-        permeability = []
-        for f in range(len(colunas['Permeability (mD)'])):
-            # converte cada valor Decimal para float
-            permeability.append(float(colunas['Permeability (mD)'][f]))
+        # Escreve cabeçalhos
+        sheet_faixas.cell(row=1, column=1, value="Porosity")
+        for i, label in enumerate(ghe_labels):
+            sheet_faixas.cell(row=1, column=i+2, value=f"GHE_{label}")
 
-        print(permeability)
+        # Escreve dados
+        for row, p in enumerate(phi, start=2):
+            sheet_faixas.cell(row=row, column=1, value=p)
+            for col, k_array in enumerate(data, start=2):
+                sheet_faixas.cell(row=row, column=col, value=k_array[row-2])
 
-        ghe = []
-        for f in range(len(colunas['GHE'])):
-            ghe.append(float(colunas['GHE'][f]))
+        # ---- Cria gráfico no Excel usando openpyxl
+        chart = ScatterChart()
+        chart.title = "Global Hydraulic Elements (GHE)"
+        chart.x_axis.title = "Porosity (decimal)"
+        chart.y_axis.title = "Permeability (mD)"
+        chart.y_axis.scaling.logBase = 10
+        chart.legend.position = "r"
+        chart.width = 15  # Aproximadamente 800 pixels
+        chart.height = 10  # Aproximadamente 500 pixels
 
-        print(ghe)
-        principal(porosidade_dec, permeability, ghe, file_path)
+        # Adiciona faixas coloridas
+        colors = [
+            "FF0000", "FF4500", "FFA500", "FFD700", "ADFF2F",
+            "00FA9A", "00CED1", "1E90FF", "8A2BE2", "FF69B4"
+        ]
+
+        for i in range(len(fzi_values) - 1):
+            xvalues = Reference(sheet_faixas, min_col=1, min_row=2, max_row=301)
+            yvalues = Reference(sheet_faixas, min_col=i+2, min_row=2, max_row=301)
+            series = Series(yvalues, xvalues, title=f"GHE {ghe_labels[i]}")
+            series.graphicalProperties.line.solidFill = colors[i]
+            chart.append(series)
+
+        # Adiciona pontos experimentais
+        xvalues_exp = Reference(sheet1, min_col=3, min_row=2, max_row=len(porosidade_dec)+1)  # Coluna Porosity Decimal
+        yvalues_exp = Reference(sheet1, min_col=4, min_row=2, max_row=len(permeability)+1)  # Coluna Permeability
+        series_exp = Series(yvalues_exp, xvalues_exp, title="teste")
+        series_exp.marker.symbol = "circle"
+        series_exp.marker.size = 6
+        series_exp.marker.graphicalProperties.solidFill = "000000"
+        series_exp.graphicalProperties.line.noFill = True
+        chart.append(series_exp)
+
+        # Insere gráfico na planilha principal
+        sheet1.add_chart(chart, "I2")
+
+        # Salva o arquivo
+        workbook.save(file_path)
+
+    # O método criGrafico não é mais necessário, pois foi integrado
+
 
 class Aplicativo:
     def __init__(self, master=None):
