@@ -10,12 +10,14 @@ from openpyxl.styles import Alignment, PatternFill
 import numpy as np
 import os
 
+
 # -----------------------------
 def permeabilit(phi, fzi):
     phi = np.clip(phi, 1e-6, 0.99)
     phi_e = phi / (1 - phi)
     k = phi * ((fzi * phi_e) / 0.0314) ** 2
     return k
+
 
 class AutomatizacaoPlanilha:
     def __init__(self, df, nomeTabela):
@@ -38,6 +40,7 @@ class AutomatizacaoPlanilha:
         return [round(p / 100, 3) for p in self._porosidade]
 
     getcontext().prec = 28  # define alta precisão
+
     def porosidadeDec(self):
         # Não usar round aqui!
         return [Decimal(str(p)) / Decimal("100") for p in self._porosidade]
@@ -144,7 +147,7 @@ class AutomatizacaoPlanilha:
         # Escreve cabeçalhos e dados
         headers = list(dfColunas.columns)
         for col_num, header in enumerate(headers):
-            cell = sheet1.cell(row=1, column=col_num+1, value=header)
+            cell = sheet1.cell(row=1, column=col_num + 1, value=header)
             cell.alignment = Alignment(horizontal='center', vertical='center')
             if header in ['FZI', 'RQI', 'PHI(Z)', 'GHE']:
                 cell.fill = PatternFill(start_color="FFFF99", end_color="FFFF99", fill_type="solid")
@@ -153,23 +156,49 @@ class AutomatizacaoPlanilha:
 
         for row_num, row in enumerate(dfColunas.itertuples(index=False), start=2):
             for col_num, value in enumerate(row):
-                cell = sheet1.cell(row=row_num, column=col_num+1, value=float(value) if isinstance(value, Decimal) else value)
+                cell = sheet1.cell(row=row_num, column=col_num + 1,
+                                   value=float(value) if isinstance(value, Decimal) else value)
                 cell.alignment = Alignment(horizontal='center', vertical='center')
-                if headers[col_num] in ['Porosity Decimal', 'Profundidade', 'Permeability (mD)', 'Porosity (%)', 'PHI(Z)']:
+                if headers[col_num] in ['Porosity Decimal', 'Profundidade', 'Permeability (mD)', 'Porosity (%)',
+                                        'PHI(Z)']:
                     cell.number_format = '0.000'
                 elif headers[col_num] in ['RQI', 'FZI']:
                     cell.number_format = '0.############'
 
-        # Ajusta largura das colunas
-        for col in range(1, len(headers)+1):
-            sheet1.column_dimensions[get_column_letter(col)].width = 20
-
-        # ---- Prepara dados para gráfico
+        # ---- Adiciona colunas para agrupar pontos por GHE (para o gráfico)
         porosidade_dec = [float(p) for p in dfColunas['Porosity Decimal']]
         permeability = [float(p) for p in dfColunas['Permeability (mD)']]
-        ghe = [float(g) for g in dfColunas['GHE']]
+        ghe = [int(g) for g in dfColunas['GHE']]  # Converte para int para facilitar
 
-        # ---- Planilha 2: Faixas
+        # Colunas iniciais: 8 (Profundidade a GHE)
+        next_col = len(headers) + 1
+        ghe_columns = {}  # Dicionário para armazenar colunas de cada GHE: {ghe_valor: (col_porosity, col_perm)}
+
+        for ghe_valor in range(11):  # GHE de 0 a 10
+            col_porosity = next_col
+            col_perm = next_col + 1
+            ghe_columns[ghe_valor] = (col_porosity, col_perm)
+
+            # Cabeçalhos para as novas colunas
+            sheet1.cell(row=1, column=col_porosity, value=f"Porosity GHE {ghe_valor}")
+            sheet1.cell(row=1, column=col_perm, value=f"Perm GHE {ghe_valor}")
+
+            # Preenche dados: apenas para pontos com esse GHE
+            for row_num in range(2, len(porosidade_dec) + 2):
+                idx = row_num - 2
+                if ghe[idx] == ghe_valor:
+                    sheet1.cell(row=row_num, column=col_porosity, value=porosidade_dec[idx])
+                    sheet1.cell(row=row_num, column=col_perm, value=permeability[idx])
+                # Caso contrário, deixa vazio (None)
+
+            next_col += 2
+
+        # Ajusta largura das colunas (incluindo as novas)
+        total_cols = next_col - 1
+        for col in range(1, total_cols + 1):
+            sheet1.column_dimensions[get_column_letter(col)].width = 20
+
+        # ---- Planilha 2: Faixas (mantém igual)
         fzi_values = [48, 24, 12, 6, 3, 1.5, 0.75, 0.375, 0.1875, 0.0938]
         ghe_labels = list(range(10, 0, -1))
         phi = np.linspace(0.01, 0.5, 300)
@@ -192,13 +221,13 @@ class AutomatizacaoPlanilha:
         # Escreve cabeçalhos
         sheet_faixas.cell(row=1, column=1, value="Porosity")
         for i, label in enumerate(ghe_labels):
-            sheet_faixas.cell(row=1, column=i+2, value=f"GHE_{label}")
+            sheet_faixas.cell(row=1, column=i + 2, value=f"GHE_{label}")
 
         # Escreve dados
         for row, p in enumerate(phi, start=2):
             sheet_faixas.cell(row=row, column=1, value=p)
             for col, k_array in enumerate(data, start=2):
-                sheet_faixas.cell(row=row, column=col, value=k_array[row-2])
+                sheet_faixas.cell(row=row, column=col, value=k_array[row - 2])
 
         # ---- Cria gráfico no Excel usando openpyxl
         chart = ScatterChart()
@@ -210,7 +239,7 @@ class AutomatizacaoPlanilha:
         chart.width = 15  # Aproximadamente 800 pixels
         chart.height = 10  # Aproximadamente 500 pixels
 
-        # Adiciona faixas coloridas
+        # Adiciona faixas coloridas (mantém igual)
         colors = [
             "FF0000", "FF4500", "FFA500", "FFD700", "ADFF2F",
             "00FA9A", "00CED1", "1E90FF", "8A2BE2", "FF69B4"
@@ -218,20 +247,26 @@ class AutomatizacaoPlanilha:
 
         for i in range(len(fzi_values) - 1):
             xvalues = Reference(sheet_faixas, min_col=1, min_row=2, max_row=301)
-            yvalues = Reference(sheet_faixas, min_col=i+2, min_row=2, max_row=301)
+            yvalues = Reference(sheet_faixas, min_col=i + 2, min_row=2, max_row=301)
             series = Series(yvalues, xvalues, title=f"GHE {ghe_labels[i]}")
             series.graphicalProperties.line.solidFill = colors[i]
             chart.append(series)
 
-        # Adiciona pontos experimentais
-        xvalues_exp = Reference(sheet1, min_col=3, min_row=2, max_row=len(porosidade_dec)+1)  # Coluna Porosity Decimal
-        yvalues_exp = Reference(sheet1, min_col=4, min_row=2, max_row=len(permeability)+1)  # Coluna Permeability
-        series_exp = Series(yvalues_exp, xvalues_exp, title="teste")
-        series_exp.marker.symbol = "circle"
-        series_exp.marker.size = 6
-        series_exp.marker.graphicalProperties.solidFill = "000000"
-        series_exp.graphicalProperties.line.noFill = True
-        chart.append(series_exp)
+        # ---- Adiciona pontos experimentais agrupados por GHE (NOVA PARTE)
+        for ghe_valor in range(11):
+            col_porosity, col_perm = ghe_columns[ghe_valor]
+            xvalues_exp = Reference(sheet1, min_col=col_porosity, min_row=2, max_row=len(porosidade_dec) + 1)
+            yvalues_exp = Reference(sheet1, min_col=col_perm, min_row=2, max_row=len(permeability) + 1)
+            series_exp = Series(yvalues_exp, xvalues_exp, title=f"GHE {ghe_valor}")  # Título na legenda
+            series_exp.marker.symbol = "circle"
+            series_exp.marker.size = 6
+            # Cor do marcador baseada no GHE (mesmas cores das faixas, preto para GHE 0)
+            if ghe_valor == 0:
+                series_exp.marker.graphicalProperties.solidFill = "000000"
+            else:
+                series_exp.marker.graphicalProperties.solidFill = colors[ghe_valor - 1]
+            series_exp.graphicalProperties.line.noFill = True
+            chart.append(series_exp)
 
         # Insere gráfico na planilha principal
         sheet1.add_chart(chart, "I2")
@@ -289,14 +324,16 @@ class Aplicativo:
         self.quartoContainer.pack()
 
         self.titulo = tk.Label(
-        self.primeiroContainer,text='Antes de selecionar o arquivo, observe\nse a planilha contém as seguintes colunas:\n\nProf. (m)\nPorosidade (%)\nPerm Abs Longitud (m)')
+            self.primeiroContainer,
+            text='Antes de selecionar o arquivo, observe\nse a planilha contém as seguintes colunas:\n\nProf. (m)\nPorosidade (%)\nPerm Abs Longitud (m)')
         self.titulo.pack()
 
-        self.btnArquivo = tk.Button(self.segundoContainer, text='Selecionar arquivo', width=25, command=selecionar_arquivo)
+        self.btnArquivo = tk.Button(self.segundoContainer, text='Selecionar arquivo', width=25,
+                                    command=selecionar_arquivo)
         self.btnArquivo.pack()
 
-        #self.btnDocx = tk.Button(self.quartoContainer, text='Converter tabela .docx em planilha .xls', width=40, command=selecionar_e_converter)
-        #self.btnDocx.pack()
+        # self.btnDocx = tk.Button(self.quartoContainer, text='Converter tabela .docx em planilha .xls', width=40, command=selecionar_e_converter)
+        # self.btnDocx.pack()
 
 
 # Executa o programa
