@@ -236,10 +236,14 @@ class AutomatizacaoPlanilha:
         chart.y_axis.title = "Permeability (mD)"
         chart.y_axis.scaling.logBase = 10
         chart.legend.position = "r"
-        chart.width = 15  # Aproximadamente 800 pixels
-        chart.height = 10  # Aproximadamente 500 pixels
+        chart.width = 15
+        chart.height = 10
 
-        # Adiciona faixas coloridas (mantém igual)
+        # 🔹 Remove as linhas de grade
+        chart.x_axis.majorGridlines = None
+        chart.y_axis.majorGridlines = None
+
+        # Adiciona faixas coloridas
         colors = [
             "FF0000", "FF4500", "FFA500", "FFD700", "ADFF2F",
             "00FA9A", "00CED1", "1E90FF", "8A2BE2", "FF69B4"
@@ -252,24 +256,28 @@ class AutomatizacaoPlanilha:
             series.graphicalProperties.line.solidFill = colors[i]
             chart.append(series)
 
-        # ---- Adiciona pontos experimentais agrupados por GHE (NOVA PARTE)
+        # ---- Adiciona pontos experimentais agrupados por GHE (usando as mesmas cores das faixas)
         for ghe_valor in range(11):
             col_porosity, col_perm = ghe_columns[ghe_valor]
             xvalues_exp = Reference(sheet1, min_col=col_porosity, min_row=2, max_row=len(porosidade_dec) + 1)
             yvalues_exp = Reference(sheet1, min_col=col_perm, min_row=2, max_row=len(permeability) + 1)
-            series_exp = Series(yvalues_exp, xvalues_exp, title=f"GHE {ghe_valor}")  # Título na legenda
+
+            series_exp = Series(yvalues_exp, xvalues_exp, title=f"GHE {ghe_valor}")
             series_exp.marker.symbol = "circle"
             series_exp.marker.size = 6
-            # Cor do marcador baseada no GHE (mesmas cores das faixas, preto para GHE 0)
-            if ghe_valor == 0:
-                series_exp.marker.graphicalProperties.solidFill = "000000"
-            else:
-                series_exp.marker.graphicalProperties.solidFill = colors[ghe_valor - 1]
             series_exp.graphicalProperties.line.noFill = True
+
+            # 🔹 Usa a mesma cor da curva correspondente (GHE 1 → colors[9], GHE 10 → colors[0])
+            if ghe_valor == 0:
+                series_exp.marker.graphicalProperties.solidFill = "000000"  # preto para GHE 0
+            else:
+                idx = 10 - ghe_valor  # inverte o índice para corresponder às faixas
+                series_exp.marker.graphicalProperties.solidFill = colors[idx - 1]
+
             chart.append(series_exp)
 
         # Insere gráfico na planilha principal
-        sheet1.add_chart(chart, "I2")
+        sheet1.add_chart(chart, "E2")
 
         # Salva o arquivo
         workbook.save(file_path)
