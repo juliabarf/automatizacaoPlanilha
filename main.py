@@ -11,6 +11,7 @@ import numpy as np
 import os
 
 
+
 # -----------------------------
 def permeabilit(phi, fzi):
     phi = np.clip(phi, 1e-6, 0.99)
@@ -198,7 +199,7 @@ class AutomatizacaoPlanilha:
         for col in range(1, total_cols + 1):
             sheet1.column_dimensions[get_column_letter(col)].width = 20
 
-        # ---- Planilha 2: Faixas (mantém igual)
+        # ---- Planilha 2: Faixas
         fzi_values = [48, 24, 12, 6, 3, 1.5, 0.75, 0.375, 0.1875, 0.0938]
         ghe_labels = list(range(10, 0, -1))
         phi = np.linspace(0.01, 0.5, 300)
@@ -236,12 +237,17 @@ class AutomatizacaoPlanilha:
         chart.y_axis.title = "Permeability (mD)"
         chart.y_axis.scaling.logBase = 10
         chart.legend.position = "r"
-        chart.width = 15
-        chart.height = 10
+        chart.width = 20
+        chart.height = 15
 
-        # 🔹 Remove as linhas de grade
+        # Remove linhas de grade
         chart.x_axis.majorGridlines = None
         chart.y_axis.majorGridlines = None
+
+
+        # Afastamento das faixas do eixo Y
+        chart.x_axis.scaling.min = -0.02
+
 
         # Adiciona faixas coloridas
         colors = [
@@ -249,7 +255,7 @@ class AutomatizacaoPlanilha:
             "00FA9A", "00CED1", "1E90FF", "8A2BE2", "FF69B4"
         ]
 
-        for i in range(len(fzi_values) - 1):
+        for i in range(len(fzi_values)):
             xvalues = Reference(sheet_faixas, min_col=1, min_row=2, max_row=301)
             yvalues = Reference(sheet_faixas, min_col=i + 2, min_row=2, max_row=301)
             series = Series(yvalues, xvalues, title=f"GHE {ghe_labels[i]}")
@@ -262,19 +268,22 @@ class AutomatizacaoPlanilha:
             xvalues_exp = Reference(sheet1, min_col=col_porosity, min_row=2, max_row=len(porosidade_dec) + 1)
             yvalues_exp = Reference(sheet1, min_col=col_perm, min_row=2, max_row=len(permeability) + 1)
 
-            series_exp = Series(yvalues_exp, xvalues_exp, title=f"GHE {ghe_valor}")
+            # 🔹 Nenhum título — evita “SérieX”
+            series_exp = Series(yvalues_exp, xvalues_exp, title="")
             series_exp.marker.symbol = "circle"
             series_exp.marker.size = 6
             series_exp.graphicalProperties.line.noFill = True
 
-            # 🔹 Usa a mesma cor da curva correspondente (GHE 1 → colors[9], GHE 10 → colors[0])
             if ghe_valor == 0:
-                series_exp.marker.graphicalProperties.solidFill = "000000"  # preto para GHE 0
+                series_exp.marker.graphicalProperties.solidFill = "000000"
             else:
-                idx = 10 - ghe_valor  # inverte o índice para corresponder às faixas
+                idx = 10 - ghe_valor
                 series_exp.marker.graphicalProperties.solidFill = colors[idx - 1]
 
             chart.append(series_exp)
+
+            #remove a tal legenda que n mudou em nada
+            chart.series[-1].graphicalProperties.noFill = True
 
         # Insere gráfico na planilha principal
         sheet1.add_chart(chart, "E2")
